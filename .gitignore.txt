@@ -1,0 +1,5 @@
+*.jpg
+*.docx
+*.RHistory
+/.Rproj.user/
+Figures/
