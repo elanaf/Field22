@@ -5,8 +5,36 @@ library(RColorBrewer)
 
 ####FB####
 
+####General graph#####
+#trt x control to see how they look compared to the control 
+#see if it looks liek things came up the way they were supposed to 
+fb_1 <- fb %>% filter(Date == "2022-09-16") 
+
+#things I planted that came up: BOMA, DISP, EUMA, SYCI, SCAC, BICE, BIFR, EUOC, MUAS, SCAM, RUMA
+fb_1 %>% ggplot(aes(x = Plot, y = SYCI
+                    )) +
+  geom_point()
+
+#Things that only came up where they were supposed to: BIFR, BICE, EUMA, SYCI, SCAC, EUOC, SCAM
+#Things that look like more came up where planted:DISP (maybe slightly)
+#Things that didn't come up in control: BOMA - but came up in places where it wasn't planted as much as where was planted so idk,
+                                        #RUMA - came up the same amount in both 5 and 1
+#PHAU might be slightly more in 4 and none in 5 but same for everything else
+
+#look to see if the measurements seem to be related to anything
+fb_1%>% ggplot(aes(x = Plot, y = Measurement.3)) +
+  geom_point()
+
+#Measurement 1 highest in 2L and 3H
+#Measurement 2 highest in 1H, 1L, and 2H
+#Measurement 3 highest in 1H, 3H, and C
+
+####Invasive vs native####
 #Pivot table so columns are response but species are rows
-fb_short <- fb[-c(28,6, 23, 24, 29, 30, 31)] #removing notes column and things we don't want calculated (unknowns and total cover and measurements)
+fb_short <- fb %>%
+  select(Block, Plot, Group, Density, Date, PHAU, Cheno, Typha, 
+         BOMA, DISP, EUMA, SYCI, LEFA, SCAC, BICE, BIFR, EUOC, MUAS, SCAM, RUMA,
+         RUST, Unk_Bulrush, SARU, Tamarisk)#removing notes column and things we don't want calculated (unknowns and total cover and measurements)
 fb_end <- fb_short %>% #make it so it is only the final date
   filter(Date == "2022-09-16") 
 
@@ -53,7 +81,9 @@ fb_split %>%
 ggsave("fb_invasive_native.jpeg",
        device = jpeg)
 
+####Graph what came up####
 #Graph of the species that I know came up and what they did over time
+##This needs to be compared to above calculations in trt x control - I made the intial graph quickly and not sure if these species are totally correct
 my_species <- c("BOMA", 'DISP', 'SYCI', 'SCAC', 'BICE', 'RUMA')
 #EUMA, EUOC, SCAM, or MUAS because not enough sightings
 #need to combine BICE and BIFR
@@ -108,9 +138,34 @@ ggsave(filename = "Fb_plot.jpeg",
        device = "jpeg")
 
  ####UL####
+####General graph####
+#trt x control to see how they look compared to the control 
+ul_1 <- ul %>% filter(Date == "2022-09-16") 
+
+#things I planted that came up: BOMA, BICE, RUMA, SCAC, SCAM, DISP, SYCI, EUOC, 
+ul_1 %>% ggplot(aes(x = Plot, y = EUOC
+                    )) +
+  geom_point()
+
+#Things that look like more came up where planted: BOMA(maybe, not really), BICE (maybe), DISP
+#Things that didn't come up in control: SCAC (but came up lots elsewhere), same as SCAC
+#PHAU is slightly higher in 3 and 5 and same as control elsewhere
+#RUMA was higher not in my seeded plots, and EUOC
+
+#look to see if the measurements seem to be related to anything
+ul_1%>% ggplot(aes(x = Plot, y = Measurement.1)) +
+  geom_point()
+
+#Measurement 1 highest in 4H
+#Measurement 2 highest in C
+#Measurement 3 highest in 1L, 2H, 4H
+
 #graphs of invasive vs native
 #Pivot table so columns are response but species are rows
-ul_short <- ul[-c(6, 7, 9, 21, 35, 36, 37, 38)] #removing notes column and things we don't want calculated (unknowns and total cover and measurements)
+ul_short <- ul%>%
+  select(Block, Plot, Group, Density, Date, PHAU, BOMA, BICE, CYER, RUMA,
+         Cheno, SCAC, SCPU, SCAM, DISP, RACY, ASIN, ALPR, CYDA, Unk_Bulrush, BY, SYCI,
+         EUOC, TYPHA, Tamarisk, POPE, POFR, SAAM, BASC, LASE)#removing notes column and things we don't want calculated (unknowns and total cover and measurements)
 ul_end <- ul_short %>% #make it so it is only the final date
   filter(Date == "2022-09-16") 
 
@@ -159,6 +214,7 @@ ggsave("ul_invasive_native.jpeg",
        device = jpeg)
 
 #Graphs so I know what came up and what they did over time
+##This needs to be compared to above calculations in trt x control - I made the intial graph quickly and not sure if these species are totally correct
 my_species <- c("BOMA", 'DISP', 'BICE', 'SCAM', 'EUOC')
 #tried to only include things that may have possibly come up at my sites
 ul_short <- ul %>%
