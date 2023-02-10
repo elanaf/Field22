@@ -50,7 +50,7 @@ fb_split<- fb_wide %>%
   dplyr::mutate(Status = 
                 dplyr::if_else(
                   SPP %in%
-                  c("PHAU", "Typha", "Rust", "Tamarisk"), 
+                  c("PHAU", "Typha", "RUST", "Tamarisk"), 
                   "Invasive", "Native"))
 
 fb_split<-fb_split %>% #and now calculate the total cover for invasive and native for each block and plot
@@ -67,6 +67,11 @@ plot_names <- c("Perennial forbs (high)", "Perennial forbs (high)",
 fb_split$plot_names <- rep(plot_names, 6)
 
 #Graph of all the plots and total cover - split invasive and native
+fb_split$plot_names <- factor(fb_split$plot_names, 
+                             levels = c("Annual forbs (high)", "Annual forbs (low)", "Perennial forbs (high)", "Perennial forbs (low)",
+                                        "Bulrushes (high)", "Bulrushes (low)","Rushes (high)", "Rushes (low)","Grasses (high)", "Grasses (low)", 
+                                        "Control"))
+
 fb_split %>% 
   ggplot(aes(x = plot_names, y = PC, color = Status)) +
   stat_summary(aes(group = Status),
@@ -160,7 +165,7 @@ ul_1%>% ggplot(aes(x = Plot, y = Measurement.1)) +
 #Measurement 2 highest in C
 #Measurement 3 highest in 1L, 2H, 4H
 
-#graphs of invasive vs native
+#### invasive vs native####
 #Pivot table so columns are response but species are rows
 ul_short <- ul%>%
   select(Block, Plot, Group, Density, Date, PHAU, BOMA, BICE, CYER, RUMA,
@@ -181,7 +186,7 @@ ul_split<- ul_wide %>%
   dplyr::mutate(Status = 
                   dplyr::if_else(
                     SPP %in%
-                      c("PHAU", "TYPHA", "Rust", "Tamarisk", "ALPR", "CYDA", "BY", 
+                      c("PHAU", "TYPHA", "RUST", "Tamarisk", "ALPR", "CYDA", "BY", 
                         "BASC", "LASE"), 
                     "Invasive", "Native"))
 
@@ -199,6 +204,11 @@ plot_names <- c("Perennial forbs (high)", "Perennial forbs (high)",
 ul_split$plot_names <- rep(plot_names, 6)
 
 #Graph of all the plots and total cover - split invasive and native
+ul_split$plot_names <- factor(ul_split$plot_names, 
+                              levels = c("Annual forbs (high)", "Annual forbs (low)", "Perennial forbs (high)", "Perennial forbs (low)",
+                                         "Bulrushes (high)", "Bulrushes (low)","Rushes (high)", "Rushes (low)","Grasses (high)", "Grasses (low)", 
+                                         "Control"))
+
 ul_split %>% 
   ggplot(aes(x = plot_names, y = PC, color = Status)) +
   stat_summary(aes(group = Status),
