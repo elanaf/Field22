@@ -202,12 +202,12 @@ max(fb$Measurement.3)
 #Add a new section for invasives and natives
 df <- fb %>%
   select("PHAU", "Typha", "RUST", "Tamarisk") %>%
-  mutate(Invasive = rowMeans(.,na.rm = T))
+  mutate(Invasive = rowSums(.,na.rm = T))
 df1 <- fb %>%
   select("Cheno", "BOMA", "DISP", "EUMA", "SYCI", "LEFA", "SCAC",
          "BICE", "BIFR", "EUOC", "MUAS", "SCAM", "RUMA", "Unk_Bulrush", 
          "SARU") %>%
-  mutate(Native = rowMeans(.,na.rm = T))
+  mutate(Native = rowSums(.,na.rm = T))
 
 fb$Invasive.Cover <- df$Invasive
 fb$Native.Cover <- df1$Native
@@ -216,13 +216,15 @@ max(fb$Invasive.Cover, na.rm = T)
 max(fb$Native.Cover, na.rm = T)
 
 #unique(fb$Invasive.Cover)
-#get rid of the NAs
+#get rid of the NAs and 0s
 #min(fb$Invasive.Cover)
 fb$Invasive.Cover[is.na(fb$Invasive.Cover)] <- 0.0025
+fb$Invasive.Cover[fb$Invasive.Cover==0] <- 0.0025
 
 #unique(fb$Native.Cover)
 #min(fb$Native.Cover, na.rm = TRUE)
 fb$Native.Cover[is.na(fb$Native.Cover)] <- 0.0025
+fb$Native.Cover[fb$Native.Cover==0] <- 0.0025
 
 ####fix UL####
 glimpse(ul)
@@ -481,11 +483,11 @@ max(ul$Measurement.3, na.rm = TRUE)
 df <- ul %>%
   select("PHAU", "TYPHA", "Tamarisk", "ALPR", "CYDA", "BY", 
          "BASC", "LASE") %>%
-  mutate(Invasive = rowMeans(.,na.rm = T))
+  mutate(Invasive = rowSums(.,na.rm = T))
 df1 <- ul %>%
   select("Unk_Bulrush", "BOMA", "BICE", 'CYER', 'RUMA', 'Cheno', 'SCAC', 'SCAM',
          'SCPU', 'DISP', 'RACY', 'ASIN', 'SYCI', 'EUOC', 'POPE', 'POFR', 'SAAM') %>%
-  mutate(Native = rowMeans(.,na.rm = T))
+  mutate(Native = rowSums(.,na.rm = T))
 
 ul$Invasive.Cover <- df$Invasive
 ul$Native.Cover <- df1$Native
@@ -493,14 +495,18 @@ ul$Native.Cover <- df1$Native
 max(ul$Invasive.Cover, na.rm = TRUE)
 max(ul$Native.Cover, na.rm = TRUE)
 
-#unique(ul$Invasive.Cover)
+unique(ul$Invasive.Cover)
 #get rid of the NAs
 #min(ul$Invasive.Cover, na.rm = TRUE)
 ul$Invasive.Cover[is.na(ul$Invasive.Cover)] <- 0.0025
+ul$Invasive.Cover[ul$Invasive.Cover==0] <- 0.0025
 
 #unique(ul$Native.Cover)
 #min(ul$Native.Cover, na.rm = TRUE)
 ul$Native.Cover[is.na(ul$Native.Cover)] <- 0.0025
+ul$Native.Cover[ul$Native.Cover==0] <- 0.0025
+
+
 
 ####Save files####
 save(ul, fb, file = "clean_dfs.RData")
