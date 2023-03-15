@@ -1,3 +1,0 @@
-# This is my database structure
-
-This is my structure for my finak project for RDS 2023. 

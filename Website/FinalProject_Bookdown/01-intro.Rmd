@@ -1,0 +1,63 @@
+#My database structure
+
+##Overview
+The first step in preparing my data to be used as the final project of Reproducible Data Science 2023 was to create a database in R using RSQLite. The following code is an edited version of the code I used in Assignment 4.
+
+##Introduction to my data
+###My thesis
+All the data used in this project comes from my 2022 field experiment, conducted at both Utah Lake and the Great Salt Lake. For my thesis, I am studying whether changes in the seeding density or functional diversity of my native seed mixes alter their biotic resistance, their ability to prevent invasive plants from entering the study area.
+
+There are two leading theories about biotic resistance. Some ecologists believe that native plants that are most similar to the invasive plants of interest (in my case, *Phragmites australis*) will do the best at resisting the invader due to limiting similarity. In my case, this would mean that grasses do the best at resisting *Phragmites* growth. Other scientists believe that native plants that use the most resources and fill the most niche space will do the best at resisting invasives due to niche complementarity. In my case, this would be annual forbs because they grow the fastest and pre-empt the most light due to their large leaves. 
+
+###My treatments
+I conducted a full factorial experiment examining two levels of density (high and low) and five functional groups (grasses, bulrushes, rushes, annual forbs, and perennial forbs). On a bi-weekly basis, I collected canopy cover data within each plot to determine whether any of my treatments were particularly successful to preventing *Phragmites* and other invasives from entering. 
+
+###My tables 
+For this project, I will be usign two tables. Although I had three tables in my Assignment 4, I will not be incorporating any biomass data into my analyses. 
+
+My first table is called "cover". This table includes all the canopy cover estimates from my bi-weekly surveys.
+
+The second table is called "functional group". This data keeps track of which functional groups are represented by each of my 10 seed mixes.
+
+##Creating the database
+###Getting started
+The first step in creating a database are to install and load the `DBI` package. 
+
+```{r package}
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
+
+library(DBI)
+```
+
+Now we are ready to create the database and link it to SQL. 
+
+```{r database}
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
+
+field_db <- dbConnect(RSQLite::SQLite(),
+                      "field.db")
+```
+
+###Cover
+Now we can make the "cover" table. As stated above, this table has all the data related to my canopy cover surveys.
+
+The first step is to create the table. We will add the data to the table later. The columns in this table will include plot_id (an individual identifier of each plot made up of 1-3 characters), seed_mix (a tag to reference the seed mix used in the plot), density (either high 'H' or low 'L'), block (a number 1-6, referring to the replicate number), date, and the cover estimate of several species. 
+
+```{r cover-table}
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
+
+#create all tables and enforce relationships
+dbExecute(field_db, "CREATE TABLE cover (
+          plot_id varchar(3) NOT NULL,
+          seed_mix varchar(2) NOT NULL,
+          density char(1) NOT NULL,
+          block char(1) NOT NULL,
+          date text,
+          PHAU_cover varchar(2),
+          DISP_cover varchar(2),
+          EUOC_cover varchar(2),
+          SCAM_cover varchar(2),
+          BICE_cover varchar(2),
+          PRIMARY KEY (plot_id)
+          );")
+```

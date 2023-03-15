@@ -88,3 +88,9 @@ functional_group <- functional_group[,c("group_id", "seed_mix", "grp")]
 dbWriteTable(field_db, "functional_group", functional_group, append = TRUE)
 
 dbGetQuery(field_db, "SELECT * FROM functional_group LIMIT 10;")
+
+
+
+
+
+
