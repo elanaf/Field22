@@ -29,7 +29,7 @@ set in the _output.yml file.</p>" />
 <meta name="author" content="John Doe" />
 
 
-<meta name="date" content="2023-03-15" />
+<meta name="date" content="2023-03-17" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -37,7 +37,7 @@ set in the _output.yml file.</p>" />
   
   
 
-<link rel="next" href="cross.html"/>
+<link rel="next" href="my-database-structure.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -125,28 +125,6 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
-<style type="text/css">
-/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-}
-.hanging div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}
-</style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -164,36 +142,24 @@ div.csl-indent {
 <li><a href="./">A Minimal Book Example</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> About</a>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> About</a></li>
+<li class="chapter" data-level="2" data-path="my-database-structure.html"><a href="my-database-structure.html"><i class="fa fa-check"></i><b>2</b> My database structure</a>
 <ul>
-<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#usage"><i class="fa fa-check"></i><b>1.1</b> Usage</a></li>
-<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#render-book"><i class="fa fa-check"></i><b>1.2</b> Render book</a></li>
-<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#preview-book"><i class="fa fa-check"></i><b>1.3</b> Preview book</a></li>
-</ul></li>
-<li class="chapter" data-level="2" data-path="cross.html"><a href="cross.html"><i class="fa fa-check"></i><b>2</b> Cross-references</a>
+<li class="chapter" data-level="2.1" data-path="my-database-structure.html"><a href="my-database-structure.html#overview"><i class="fa fa-check"></i><b>2.1</b> Overview</a></li>
+<li class="chapter" data-level="2.2" data-path="my-database-structure.html"><a href="my-database-structure.html#introduction-to-my-data"><i class="fa fa-check"></i><b>2.2</b> Introduction to my data</a>
 <ul>
-<li class="chapter" data-level="2.1" data-path="cross.html"><a href="cross.html#chapters-and-sub-chapters"><i class="fa fa-check"></i><b>2.1</b> Chapters and sub-chapters</a></li>
-<li class="chapter" data-level="2.2" data-path="cross.html"><a href="cross.html#captioned-figures-and-tables"><i class="fa fa-check"></i><b>2.2</b> Captioned figures and tables</a></li>
+<li class="chapter" data-level="2.2.1" data-path="my-database-structure.html"><a href="my-database-structure.html#my-thesis"><i class="fa fa-check"></i><b>2.2.1</b> My thesis</a></li>
+<li class="chapter" data-level="2.2.2" data-path="my-database-structure.html"><a href="my-database-structure.html#my-treatments"><i class="fa fa-check"></i><b>2.2.2</b> My treatments</a></li>
+<li class="chapter" data-level="2.2.3" data-path="my-database-structure.html"><a href="my-database-structure.html#my-tables"><i class="fa fa-check"></i><b>2.2.3</b> My tables</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="parts.html"><a href="parts.html"><i class="fa fa-check"></i><b>3</b> Parts</a></li>
-<li class="chapter" data-level="4" data-path="footnotes-and-citations.html"><a href="footnotes-and-citations.html"><i class="fa fa-check"></i><b>4</b> Footnotes and citations</a>
+<li class="chapter" data-level="2.3" data-path="my-database-structure.html"><a href="my-database-structure.html#creating-the-database"><i class="fa fa-check"></i><b>2.3</b> Creating the database</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="footnotes-and-citations.html"><a href="footnotes-and-citations.html#footnotes"><i class="fa fa-check"></i><b>4.1</b> Footnotes</a></li>
-<li class="chapter" data-level="4.2" data-path="footnotes-and-citations.html"><a href="footnotes-and-citations.html#citations"><i class="fa fa-check"></i><b>4.2</b> Citations</a></li>
+<li class="chapter" data-level="2.3.1" data-path="my-database-structure.html"><a href="my-database-structure.html#getting-started"><i class="fa fa-check"></i><b>2.3.1</b> Getting started</a></li>
+<li class="chapter" data-level="2.3.2" data-path="my-database-structure.html"><a href="my-database-structure.html#cover"><i class="fa fa-check"></i><b>2.3.2</b> Cover</a></li>
+<li class="chapter" data-level="2.3.3" data-path="my-database-structure.html"><a href="my-database-structure.html#functional-groups"><i class="fa fa-check"></i><b>2.3.3</b> Functional groups</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="blocks.html"><a href="blocks.html"><i class="fa fa-check"></i><b>5</b> Blocks</a>
-<ul>
-<li class="chapter" data-level="5.1" data-path="blocks.html"><a href="blocks.html#equations"><i class="fa fa-check"></i><b>5.1</b> Equations</a></li>
-<li class="chapter" data-level="5.2" data-path="blocks.html"><a href="blocks.html#theorems-and-proofs"><i class="fa fa-check"></i><b>5.2</b> Theorems and proofs</a></li>
-<li class="chapter" data-level="5.3" data-path="blocks.html"><a href="blocks.html#callout-blocks"><i class="fa fa-check"></i><b>5.3</b> Callout blocks</a></li>
+<li class="chapter" data-level="2.4" data-path="my-database-structure.html"><a href="my-database-structure.html#import-data"><i class="fa fa-check"></i><b>2.4</b> Import data</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="sharing-your-book.html"><a href="sharing-your-book.html"><i class="fa fa-check"></i><b>6</b> Sharing your book</a>
-<ul>
-<li class="chapter" data-level="6.1" data-path="sharing-your-book.html"><a href="sharing-your-book.html#publishing"><i class="fa fa-check"></i><b>6.1</b> Publishing</a></li>
-<li class="chapter" data-level="6.2" data-path="sharing-your-book.html"><a href="sharing-your-book.html#pages"><i class="fa fa-check"></i><b>6.2</b> 404 pages</a></li>
-<li class="chapter" data-level="6.3" data-path="sharing-your-book.html"><a href="sharing-your-book.html#metadata-for-sharing"><i class="fa fa-check"></i><b>6.3</b> Metadata for sharing</a></li>
-</ul></li>
-<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 
@@ -217,78 +183,14 @@ div.csl-indent {
 <div id="header">
 <h1 class="title">A Minimal Book Example</h1>
 <p class="author"><em>John Doe</em></p>
-<p class="date"><em>2023-03-15</em></p>
+<p class="date"><em>2023-03-17</em></p>
 </div>
 <div id="about" class="section level1 hasAnchor" number="1">
 <h1><span class="header-section-number">Chapter 1</span> About<a href="index.html#about" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>This is a <em>sample</em> book written in <strong>Markdown</strong>. You can use anything that Pandoc’s Markdown supports; for example, a math equation <span class="math inline">\(a^2 + b^2 = c^2\)</span>.</p>
-<div id="usage" class="section level2 hasAnchor" number="1.1">
-<h2><span class="header-section-number">1.1</span> Usage<a href="index.html#usage" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>Each <strong>bookdown</strong> chapter is an .Rmd file, and each .Rmd file can contain one (and only one) chapter. A chapter <em>must</em> start with a first-level heading: <code># A good chapter</code>, and can contain one (and only one) first-level heading.</p>
-<p>Use second-level and higher headings within chapters like: <code>## A short section</code> or <code>### An even shorter section</code>.</p>
-<p>The <code>index.Rmd</code> file is required, and is also your first book chapter. It will be the homepage when you render the book.</p>
-</div>
-<div id="render-book" class="section level2 hasAnchor" number="1.2">
-<h2><span class="header-section-number">1.2</span> Render book<a href="index.html#render-book" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>You can render the HTML version of this example book without changing anything:</p>
-<ol style="list-style-type: decimal">
-<li><p>Find the <strong>Build</strong> pane in the RStudio IDE, and</p></li>
-<li><p>Click on <strong>Build Book</strong>, then select your output format, or select “All formats” if you’d like to use multiple formats from the same book source files.</p></li>
-</ol>
-<p>Or build the book from the R console:</p>
+<p>This is the final project for Reproducible Data Science 2023.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="index.html#cb1-1" aria-hidden="true" tabindex="-1"></a>bookdown<span class="sc">::</span><span class="fu">render_book</span>()</span></code></pre></div>
-<p>To render this example to PDF as a <code>bookdown::pdf_book</code>, you’ll need to install XeLaTeX. You are recommended to install TinyTeX (which includes XeLaTeX): <a href="https://yihui.org/tinytex/" class="uri">https://yihui.org/tinytex/</a>.</p>
-</div>
-<div id="preview-book" class="section level2 hasAnchor" number="1.3">
-<h2><span class="header-section-number">1.3</span> Preview book<a href="index.html#preview-book" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>As you work, you may start a local server to live preview this HTML book. This preview will update as you edit the book when you save individual .Rmd files. You can start the server in a work session by using the RStudio add-in “Preview book”, or from the R console:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="index.html#cb2-1" aria-hidden="true" tabindex="-1"></a>bookdown<span class="sc">::</span><span class="fu">serve_book</span>()</span></code></pre></div>
 
-<p>#My database structure</p>
-<p>##Overview
-The first step in preparing my data to be used as the final project of Reproducible Data Science 2023 was to create a database in R using RSQLite. The following code is an edited version of the code I used in Assignment 4.</p>
-<p>##Introduction to my data
-###My thesis
-All the data used in this project comes from my 2022 field experiment, conducted at both Utah Lake and the Great Salt Lake. For my thesis, I am studying whether changes in the seeding density or functional diversity of my native seed mixes alter their biotic resistance, their ability to prevent invasive plants from entering the study area.</p>
-<p>There are two leading theories about biotic resistance. Some ecologists believe that native plants that are most similar to the invasive plants of interest (in my case, <em>Phragmites australis</em>) will do the best at resisting the invader due to limiting similarity. In my case, this would mean that grasses do the best at resisting <em>Phragmites</em> growth. Other scientists believe that native plants that use the most resources and fill the most niche space will do the best at resisting invasives due to niche complementarity. In my case, this would be annual forbs because they grow the fastest and pre-empt the most light due to their large leaves.</p>
-<p>###My treatments
-I conducted a full factorial experiment examining two levels of density (high and low) and five functional groups (grasses, bulrushes, rushes, annual forbs, and perennial forbs). On a bi-weekly basis, I collected canopy cover data within each plot to determine whether any of my treatments were particularly successful to preventing <em>Phragmites</em> and other invasives from entering.</p>
-<p>###My tables
-For this project, I will be usign two tables. Although I had three tables in my Assignment 4, I will not be incorporating any biomass data into my analyses.</p>
-<p>My first table is called “cover”. This table includes all the canopy cover estimates from my bi-weekly surveys.</p>
-<p>The second table is called “functional group”. This data keeps track of which functional groups are represented by each of my 10 seed mixes.</p>
-<p>##Creating the database
-###Getting started
-The first step in creating a database are to install and load the <code>DBI</code> package.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="index.html#cb3-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">echo =</span> <span class="cn">TRUE</span>, <span class="at">eval =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb3-2"><a href="index.html#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="index.html#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DBI)</span></code></pre></div>
-<p>Now we are ready to create the database and link it to SQL.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="index.html#cb4-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">echo =</span> <span class="cn">TRUE</span>, <span class="at">eval =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb4-2"><a href="index.html#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-3"><a href="index.html#cb4-3" aria-hidden="true" tabindex="-1"></a>field_db <span class="ot">&lt;-</span> <span class="fu">dbConnect</span>(RSQLite<span class="sc">::</span><span class="fu">SQLite</span>(),</span>
-<span id="cb4-4"><a href="index.html#cb4-4" aria-hidden="true" tabindex="-1"></a>                      <span class="st">&quot;field.db&quot;</span>)</span></code></pre></div>
-<p>###Cover
-Now we can make the “cover” table. As stated above, this table has all the data related to my canopy cover surveys.</p>
-<p>The first step is to create the table. We will add the data to the table later. The columns in this table will include plot_id (an individual identifier of each plot made up of 1-3 characters), seed_mix (a tag to reference the seed mix used in the plot), density (either high ‘H’ or low ‘L’), block (a number 1-6, referring to the replicate number), date, and the cover estimate of several species.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="index.html#cb5-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">echo =</span> <span class="cn">TRUE</span>, <span class="at">eval =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb5-2"><a href="index.html#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="index.html#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#create all tables and enforce relationships</span></span>
-<span id="cb5-4"><a href="index.html#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">dbExecute</span>(field_db, <span class="st">&quot;CREATE TABLE cover (</span></span>
-<span id="cb5-5"><a href="index.html#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="st">          plot_id varchar(3) NOT NULL,</span></span>
-<span id="cb5-6"><a href="index.html#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="st">          seed_mix varchar(2) NOT NULL,</span></span>
-<span id="cb5-7"><a href="index.html#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="st">          density char(1) NOT NULL,</span></span>
-<span id="cb5-8"><a href="index.html#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="st">          block char(1) NOT NULL,</span></span>
-<span id="cb5-9"><a href="index.html#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="st">          date text,</span></span>
-<span id="cb5-10"><a href="index.html#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="st">          PHAU_cover varchar(2),</span></span>
-<span id="cb5-11"><a href="index.html#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="st">          DISP_cover varchar(2),</span></span>
-<span id="cb5-12"><a href="index.html#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="st">          EUOC_cover varchar(2),</span></span>
-<span id="cb5-13"><a href="index.html#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="st">          SCAM_cover varchar(2),</span></span>
-<span id="cb5-14"><a href="index.html#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="st">          BICE_cover varchar(2),</span></span>
-<span id="cb5-15"><a href="index.html#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="st">          PRIMARY KEY (plot_id)</span></span>
-<span id="cb5-16"><a href="index.html#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="st">          );&quot;</span>)</span></code></pre></div>
-
-</div>
 </div>
             </section>
 
@@ -296,7 +198,7 @@ Now we can make the “cover” table. As stated above, this table has all the d
         </div>
       </div>
 
-<a href="cross.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="my-database-structure.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -350,20 +252,6 @@ gitbook.start({
 });
 </script>
 
-<!-- dynamically load mathjax for compatibility with self-contained -->
-<script>
-  (function () {
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    var src = "true";
-    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
-    if (location.protocol !== "file:")
-      if (/^https?:/.test(src))
-        src = src.replace(/^https?:/, '');
-    script.src = src;
-    document.getElementsByTagName("head")[0].appendChild(script);
-  })();
-</script>
 </body>
 
 </html>
