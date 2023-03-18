@@ -5,7 +5,7 @@ The first step in preparing my data to be used as the final project of Reproduci
 
 ## Introduction to my data
 ### My thesis
-All the data used in this project comes from my 2022 field experiment, conducted at both Utah Lake and the Great Salt Lake. For my thesis, I am studying whether changes in the seeding density or functional diversity of my native seed mixes alter their biotic resistance, their ability to prevent invasive plants from entering the study area.
+All the data used in this project comes from my 2022 field experiment, conducted at both Utah Lake and the Great Salt Lake. For my thesis, I am studying whether changes in the seeding density or functional diversity of my native seed mixes alter their biotic resistance (their ability to prevent invasive plants from entering the study area).
 
 There are two leading theories about biotic resistance. Some ecologists believe that native plants that are most similar to the invasive plants of interest (in my case, *Phragmites australis*) will do the best at resisting the invader due to limiting similarity. In my case, this would mean that grasses do the best at resisting *Phragmites* growth. Other scientists believe that native plants that use the most resources and fill the most niche space will do the best at resisting invasives due to niche complementarity. In my case, this would be annual forbs because they grow the fastest and pre-empt the most light due to their large leaves. 
 
@@ -13,7 +13,7 @@ There are two leading theories about biotic resistance. Some ecologists believe 
 I conducted a full factorial experiment examining two levels of density (high and low) and five functional groups (grasses, bulrushes, rushes, annual forbs, and perennial forbs). On a bi-weekly basis, I collected canopy cover data within each plot to determine whether any of my treatments were particularly successful to preventing *Phragmites* and other invasives from entering. 
 
 ### My tables 
-For this project, I will be usign two tables. Although I had three tables in my Assignment 4, I will not be incorporating any biomass data into my analyses. 
+For this project, I will be using two tables. Although I had three tables in my Assignment 4, I will not be incorporating any biomass data into my analyses. 
 
 My first table is called "cover". This table includes all the canopy cover estimates from my bi-weekly surveys.
 
@@ -21,19 +21,19 @@ The second table is called "functional group". This data keeps track of which fu
 
 ## Creating the database
 ### Getting started
-The first step in creating a database are to install and load the `DBI` package. 
+The first step in creating a database is to install and load the `DBI` package. 
 
-```{r package}
+```{r setup, include = FALSE}
 knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
+```
 
+```{r package} 
 library(DBI)
 ```
 
 Now we are ready to create the database and link it to SQL. 
 
 ```{r database}
-knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
-
 field_db <- dbConnect(RSQLite::SQLite(),
                       "field.db")
 ```
@@ -48,8 +48,6 @@ For this chapter, solely for the purpose of saving time and space, I will only b
 Below is the RSQLite code to create the "cover" table. 
 
 ```{r cover-table}
-knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
-
 #create all tables and enforce relationships
 dbExecute(field_db, "CREATE TABLE cover (
           plot_id varchar(3) NOT NULL,
@@ -73,8 +71,6 @@ Now, we can make the "functional group" table. This table relates the functional
 This table includes a group id (an individual marker for each functional group in the table), seed mix (referring to the seed mix I planted in my research), and the group (the functional group related to the seed mix). The group id is the primary key for this table. The seed mix is a foreign key that references the column "seed_mix" in the cover table. 
 
 ```{r group-table}
-knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
-
 dbExecute(field_db, "CREATE TABLE functional_group (
           group_id char(1) NOT NULL,
           seed_mix varchar(2) NOT NULL,
@@ -89,24 +85,18 @@ dbExecute(field_db, "CREATE TABLE functional_group (
 The next step is to input the data into the tables we just created. Let's start with the cover table. The first step is to import the csv of my data. 
 
 ```{r cover-import}
-knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
-
 cover <- read.csv("/Users/elanafeldman/Documents/USUClasses/Thesis_Code/Field22/fb_sql.csv")
 ```
 
 The csv includes all the data I want in my table except for the individual plot_id. Let's make that now.
 
 ```{r cover-id}
-knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
-
 cover$plot_id <- 1:nrow(cover)
 ```
 
-Next we can add this new column onto the csv data and change all the names of the columns so that they match the names of the columns in the SQL table.
+Next we can join this new column tos the csv data and change all the names of the columns so that they match the names of the columns in the SQL table.
 
 ```{r cover-names}
-knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
-
 cover <- cover[,c("plot_id", "Group", "Density", "Block", 
                   "Date", "PHAU", "DISP", "EUOC", "SCAM", "BICE")]
 names(cover)[2:10] <- c("seed_mix", "density", "block", "date", 
