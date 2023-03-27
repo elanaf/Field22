@@ -247,6 +247,7 @@ ul$Date <- lubridate::mdy(ul$Date)
 #fix all numbers and make everything numeric
 unique(ul$Total.Cover)
 ul$Total.Cover[ul$Total.Cover == "<1"] <- "0.5"
+ul$Total.Cover[ul$Total.Cover == ">1"] <- "0.5"
 ul$Total.Cover[ul$Total.Cover == 1.00] <- 5.00
 ul$Total.Cover[ul$Total.Cover == 10.00] <- 15.00
 ul$Total.Cover[ul$Total.Cover == 20.00] <- 25.00
