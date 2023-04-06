@@ -1,4 +1,4 @@
-load("../clean_dfs.RData")
+load("clean_dfs.RData")
 library(tidyverse)
 library(magrittr)
 library(dplyr)
@@ -18,7 +18,6 @@ ul$Density <- as.factor(ul$Density)
 
 #FB ####
 # These first 2 are good examples to follow
-
 
 #only need the last date
 mdf <- fb %>%
@@ -70,7 +69,7 @@ plotResiduals(mdf.m2, form= mdf$gd)
 #We have inflated type 1 error because we use the control mean 10 times
 #We could use a tukeys but that would control for 55 tests and we only need 10 - we will lose all power
 #Allows us to just look at control against every other treatment - only the comparisons we want
-emmeans(mdf.m2, specs = trt.vs.ctrlk~gd,ref = 3) #reference group is the third option (10:C)
+emmeans(mdf.m2, specs = trt.vs.ctrlk~gd,ref = 3, type = "response") #reference group is the third option (10:C)
 #4L is the closest to being different, but nothing else
 #4L is the largest mean and 10C is pretty small, so that's why they are different
 
@@ -90,7 +89,7 @@ summary(mdf.m3) #don't use this summary
 simulateResiduals(mdf.m3, plot = T)  #residuals not great on this one
 plotResiduals(mdf.m3, form= mdf$gd)
 
-emmeans(mdf.m3, specs = trt.vs.ctrlk~gd,ref = 3) #reference group is the third option (10:C)
+emmeans(mdf.m3, specs = trt.vs.ctrlk~gd,ref = 3, type = "response") #reference group is the third option (10:C)
 #no significant differences between treatment and control 
 
 ##FB Invasive ####
@@ -202,7 +201,7 @@ car::Anova(mdf.m8) #however, this does show a significant interaction
 emmip(mdf.m8, Group~Density, CIs = T, type = "response") #shows on the level of the response
 
 mdf.m8.emm <- emmeans(mdf.m8, ~Group * Density)
-pairs(mdf.m8.emm, simple = "Density") #looks like Group 3 has the interaction, higher native cover in the low density than the high
+pairs(mdf.m8.emm, simple = "Density") #looks like Group 3 has the interaction, higher native cover in the low density
 
 ##UL Native trt vs ctl ####
 ### Dunnetts gaussian ####
@@ -219,7 +218,7 @@ summary(mdf.m9) #don't use this summary
 simulateResiduals(mdf.m9, plot = T) 
 plotResiduals(mdf.m9, form= mdf$gd)
 
-emmeans(mdf.m9, specs = trt.vs.ctrlk~gd,ref = 3) #reference group is the third option (10:C)
+emmeans(mdf.m9, specs = trt.vs.ctrlk~gd,ref = 3, type = "response") #reference group is the third option (10:C)
 #no significant differences, 5H and 2H seem kind of different 
 
 ###Dunnetts beta ####
@@ -238,5 +237,5 @@ summary(mdf.m10) #don't use this summary
 simulateResiduals(mdf.m10, plot = T)#residuals look pretty bad, don't use
 plotResiduals(mdf.m10, form= mdf$gd)
 
-emmeans(mdf.m10, specs = trt.vs.ctrlk~gd,ref = 3) #reference group is the third option (10:C)
+emmeans(mdf.m10, specs = trt.vs.ctrlk~gd,ref = 3, type = "response") #reference group is the third option (10:C)
 #no significant differences

@@ -19,6 +19,10 @@ My first table is called "cover". This table includes all the canopy cover estim
 
 The second table is called "functional group". This data keeps track of which functional groups are represented by each of my 10 seed mixes.
 
+```{r image, fig.cap= "Database structure diagram", fig.align='center', out.width='100%'}
+knitr::include_graphics("Feldman_database_structure_updated.png")
+```
+
 ## Creating the database
 ### Getting started
 The first step in creating a database is to install and load the `DBI` package. 
