@@ -30,61 +30,56 @@ fb_1%>% ggplot(aes(x = Plot, y = Measurement.3)) +
 #Measurement 3 highest in 1H, 3H, and C
 
 ####Invasive vs native####
-#Pivot table so columns are response but species are rows
-fb_short <- fb %>%
+graph_data <-fb %>%
   select(Block, Plot, Group, Density, Date, PHAU, Cheno, Typha, 
          BOMA, DISP, EUMA, SYCI, LEFA, SCAC, BICE, BIFR, EUOC, MUAS, SCAM, RUMA,
-         RUST, Unk_Bulrush, SARU, Tamarisk)#removing notes column and things we don't want calculated (unknowns and total cover and measurements)
-fb_end <- fb_short %>% #make it so it is only the final date
-  filter(Date == "2022-09-16") 
-
-fb_wide <- fb_end %>% #pivot the table
-  tidyr::pivot_longer(
+         RUST, Unk_Bulrush, SARU, Tamarisk) %>%  #remove unnecessary columns
+  filter(Date == "2022-09-16") %>%  #only the last sampling date
+  pivot_longer(
     cols = 6:24, 
     names_to = "SPP",
     values_to = "Percent_Cover"
-  )
+  ) %>% #pivot so that all species names are in one column
+  mutate(Status = 
+           dplyr::if_else(
+             SPP %in%
+               c("PHAU", "Typha", "RUST", "Tamarisk"), 
+             "Invasive", "Native")) %>%  #make a new column for species status
+  group_by(Block, Plot, Status) %>% #group by the plot and species status
+  summarise(PC = sum(Percent_Cover, na.rm = TRUE)) #calculate totals
 
-#groups natives and invasives
-fb_split<- fb_wide %>%
-  dplyr::mutate(Status = 
-                dplyr::if_else(
-                  SPP %in%
-                  c("PHAU", "Typha", "RUST", "Tamarisk"), 
-                  "Invasive", "Native"))
+graph_data <- graph_data %>%#change the names so they make sense
+  mutate(Plot = case_when(
+    Plot == "1H" ~ "Perennial forbs (high)",
+    Plot == "1L" ~ "Perennial forbs (low)",
+    Plot == "2H" ~ "Rushes (high)",
+    Plot == "2L" ~ "Rushes (low)",
+    Plot == "3H" ~ "Grasses (high)",
+    Plot == "3L" ~ "Grasses (low)",
+    Plot == "4H" ~ "Bulrushes (high)",
+    Plot == "4L" ~ "Bulrushes (low)",
+    Plot == "5H" ~ "Annual forbs (high)",
+    Plot == "5L" ~ "Annual forbs (low)",
+    Plot == "C" ~ "Control",
+    TRUE ~ "PROBLEM"
+  ))
 
-fb_split<-fb_split %>% #and now calculate the total cover for invasive and native for each block and plot
-  dplyr::group_by(Block, Plot, Status) %>%
-  dplyr::summarise(PC = sum(Percent_Cover, na.rm = TRUE))
-
-plot_names <- c("Perennial forbs (high)", "Perennial forbs (high)", 
-                         "Perennial forbs (low)", "Perennial forbs (low)",
-                         "Rushes (high)", "Rushes (high)", "Rushes (low)", "Rushes (low)",
-                         "Grasses (high)", "Grasses (high)", "Grasses (low)", "Grasses (low)",
-                         "Bulrushes (high)", "Bulrushes (high)", "Bulrushes (low)", "Bulrushes (low)",
-                         "Annual forbs (high)", "Annual forbs (high)", "Annual forbs (low)", "Annual forbs (low)",
-                         "Control", "Control")
-fb_split$plot_names <- rep(plot_names, 6)
-
-#Graph of all the plots and total cover - split invasive and native
-fb_split$plot_names <- factor(fb_split$plot_names, 
-                             levels = c("Annual forbs (high)", "Annual forbs (low)", "Perennial forbs (high)", "Perennial forbs (low)",
-                                        "Bulrushes (high)", "Bulrushes (low)","Rushes (high)", "Rushes (low)","Grasses (high)", "Grasses (low)", 
-                                        "Control"))
-
-fb_split %>% 
-  ggplot(aes(x = plot_names, y = PC, color = Status)) +
-  stat_summary(aes(group = Status),
+fb_plot <- graph_data %>%
+  mutate(Plot = factor(Plot, #set the order I want
+                       levels = c("Control", "Annual forbs (high)", 
+                                  "Annual forbs (low)", "Perennial forbs (high)",
+                                  "Perennial forbs (low)", "Rushes (high)",
+                                  "Rushes (low)", "Grasses (high)", 
+                                  "Grasses (low)", "Bulrushes (high)",
+                                  "Bulrushes (low)"))) %>% 
+  ggplot(aes(x = Plot, y = PC, color = Status)) + #x is plot, y is cover
+  stat_summary(aes(group = Status), #calculate means of the total cover
                fun = mean, geom = "point", size = 2) +
-  stat_summary(aes(group = Status, width = 0),
+  stat_summary(aes(group = Status, width = 0), #calculate error bars
                fun.data = mean_se, geom = "errorbar", size = 1) +
-  labs(x = "Functional Group", y = "Cover (%)") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 0.9)) +
-  ggtitle("Great Salt Lake") +
-  ylim(0, 100)
+  labs(x = "Functional Group", y = "Cover (%)", title = "Farmington Bay") + #labels
+  theme(axis.text.x = element_text(angle = 45, hjust = 0.9)) 
 
-ggsave("fb_invasive_native.jpeg",
-       device = jpeg)
 
 ####Graph what came up####
 #Graph of the species that I know came up and what they did over time
@@ -166,44 +161,63 @@ ul_1%>% ggplot(aes(x = Plot, y = Measurement.1)) +
 #Measurement 3 highest in 1L, 2H, 4H
 
 #### invasive vs native####
-#Pivot table so columns are response but species are rows
-ul_short <- ul%>%
+graph_data2 <- ul%>%
   select(Block, Plot, Group, Density, Date, PHAU, BOMA, BICE, CYER, RUMA,
          Cheno, SCAC, SCPU, SCAM, DISP, RACY, ASIN, ALPR, CYDA, Unk_Bulrush, BY, SYCI,
-         EUOC, TYPHA, Tamarisk, POPE, POFR, SAAM, BASC, LASE)#removing notes column and things we don't want calculated (unknowns and total cover and measurements)
-ul_end <- ul_short %>% #make it so it is only the final date
-  filter(Date == "2022-09-16") 
-
-ul_wide <- ul_end %>% #pivot the table
-  tidyr::pivot_longer(
+         EUOC, TYPHA, Tamarisk, POPE, POFR, SAAM, BASC, LASE) %>%
+  filter(Date == "2022-09-16") %>% 
+  pivot_longer(
     cols = 6:30, 
     names_to = "SPP",
     values_to = "Percent_Cover"
-  )
+  ) %>% 
+  mutate(Status = 
+           dplyr::if_else(
+             SPP %in%
+               c("PHAU", "TYPHA", "RUST", "Tamarisk", "ALPR", "CYDA", "BY", 
+                 "BASC", "LASE"), 
+             "Invasive", "Native")) %>% 
+  group_by(Block, Plot, Status) %>%
+  summarise(PC = sum(Percent_Cover, na.rm = TRUE))
 
-#groups natives and invasives
-ul_split<- ul_wide %>%
-  dplyr::mutate(Status = 
-                  dplyr::if_else(
-                    SPP %in%
-                      c("PHAU", "TYPHA", "RUST", "Tamarisk", "ALPR", "CYDA", "BY", 
-                        "BASC", "LASE"), 
-                    "Invasive", "Native"))
+graph_data2 <- graph_data2 %>% 
+  mutate(Plot = case_when(
+    Plot == "1H" ~ "Perennial forbs (high)",
+    Plot == "1L" ~ "Perennial forbs (low)",
+    Plot == "2H" ~ "Rushes (high)",
+    Plot == "2L" ~ "Rushes (low)",
+    Plot == "3H" ~ "Grasses (high)",
+    Plot == "3L" ~ "Grasses (low)",
+    Plot == "4H" ~ "Bulrushes (high)",
+    Plot == "4L" ~ "Bulrushes (low)",
+    Plot == "5H" ~ "Annual forbs (high)",
+    Plot == "5L" ~ "Annual forbs (low)",
+    Plot == "C" ~ "Control",
+    TRUE ~ "PROBLEM"
+  ))
 
-ul_split<-ul_split %>% #and now calculate the total cover for invasive and native for each block and plot
-  dplyr::group_by(Block, Plot, Status) %>%
-  dplyr::summarise(PC = sum(Percent_Cover, na.rm = TRUE))
+ul_plot <- graph_data2 %>%
+  mutate(Plot = factor(Plot, #set the order I want
+                       levels = c("Control", "Annual forbs (high)", 
+                                  "Annual forbs (low)", "Perennial forbs (high)",
+                                  "Perennial forbs (low)", "Rushes (high)",
+                                  "Rushes (low)", "Grasses (high)", 
+                                  "Grasses (low)", "Bulrushes (high)",
+                                  "Bulrushes (low)"))) %>% 
+  ggplot(aes(x = Plot, y = PC, color = Status)) + #x is plot, y is cover
+  stat_summary(aes(group = Status), #calculate means of the total cover
+               fun = mean, geom = "point", size = 2) +
+  stat_summary(aes(group = Status, width = 0), #calculate error bars
+               fun.data = mean_se, geom = "errorbar", size = 1) +
+  labs(x = "Functional Group", y = "Cover (%)", title = "Utah Lake") + #labels
+  theme(axis.text.x = element_text(angle = 45, hjust = 0.9)) 
 
-plot_names <- c("Perennial forbs (high)", "Perennial forbs (high)", 
-                "Perennial forbs (low)", "Perennial forbs (low)",
-                "Rushes (high)", "Rushes (high)", "Rushes (low)", "Rushes (low)",
-                "Grasses (high)", "Grasses (high)", "Grasses (low)", "Grasses (low)",
-                "Bulrushes (high)", "Bulrushes (high)", "Bulrushes (low)", "Bulrushes (low)",
-                "Annual forbs (high)", "Annual forbs (high)", "Annual forbs (low)", "Annual forbs (low)",
-                "Control", "Control")
-ul_split$plot_names <- rep(plot_names, 6)
+ul_plot
 
-#Graph of all the plots and total cover - split invasive and native
+library(patchwork)
+fb_plot + ul_plot
+
+##### Graph of all the plots and total cover - split invasive and native ####
 ul_split$plot_names <- factor(ul_split$plot_names, 
                               levels = c("Annual forbs (high)", "Annual forbs (low)", "Perennial forbs (high)", "Perennial forbs (low)",
                                          "Bulrushes (high)", "Bulrushes (low)","Rushes (high)", "Rushes (low)","Grasses (high)", "Grasses (low)", 

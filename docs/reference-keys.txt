@@ -11,3 +11,13 @@ getting-started
 cover
 functional-groups
 import-data
+cleaning-my-data
+overview-of-the-chapter
+overview-of-my-data
+importing-the-data
+cleaning-the-data
+visualizing-my-data
+overview-of-chapter
+organizing-the-data
+graphing-the-data
+combine

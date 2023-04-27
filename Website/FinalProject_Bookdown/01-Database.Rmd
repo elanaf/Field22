@@ -27,17 +27,13 @@ knitr::include_graphics("Feldman_database_structure_updated.png")
 ### Getting started
 The first step in creating a database is to install and load the `DBI` package. 
 
-```{r setup, include = FALSE}
-knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
-```
-
-```{r package} 
+```{r package, eval=FALSE} 
 library(DBI)
 ```
 
 Now we are ready to create the database and link it to SQL. 
 
-```{r database}
+```{r database, eval=FALSE}
 field_db <- dbConnect(RSQLite::SQLite(),
                       "field.db")
 ```
@@ -51,7 +47,7 @@ For this chapter, solely for the purpose of saving time and space, I will only b
 
 Below is the RSQLite code to create the "cover" table. 
 
-```{r cover-table}
+```{r cover-table, eval=FALSE}
 #create all tables and enforce relationships
 dbExecute(field_db, "CREATE TABLE cover (
           plot_id varchar(3) NOT NULL,
@@ -74,7 +70,7 @@ Now, we can make the "functional group" table. This table relates the functional
 
 This table includes a group id (an individual marker for each functional group in the table), seed mix (referring to the seed mix I planted in my research), and the group (the functional group related to the seed mix). The group id is the primary key for this table. The seed mix is a foreign key that references the column "seed_mix" in the cover table. 
 
-```{r group-table}
+```{r group-table, eval = FALSE}
 dbExecute(field_db, "CREATE TABLE functional_group (
           group_id char(1) NOT NULL,
           seed_mix varchar(2) NOT NULL,
@@ -88,19 +84,19 @@ dbExecute(field_db, "CREATE TABLE functional_group (
 
 The next step is to input the data into the tables we just created. Let's start with the cover table. The first step is to import the csv of my data. 
 
-```{r cover-import}
+```{r import, eval = FALSE}
 cover <- read.csv("/Users/elanafeldman/Documents/USUClasses/Thesis_Code/Field22/fb_sql.csv")
 ```
 
 The csv includes all the data I want in my table except for the individual plot_id. Let's make that now.
 
-```{r cover-id}
+```{r id, eval = FALSE}
 cover$plot_id <- 1:nrow(cover)
 ```
 
 Next we can join this new column tos the csv data and change all the names of the columns so that they match the names of the columns in the SQL table.
 
-```{r cover-names}
+```{r names, eval = FALSE}
 cover <- cover[,c("plot_id", "Group", "Density", "Block", 
                   "Date", "PHAU", "DISP", "EUOC", "SCAM", "BICE")]
 names(cover)[2:10] <- c("seed_mix", "density", "block", "date", 
@@ -110,24 +106,21 @@ names(cover)[2:10] <- c("seed_mix", "density", "block", "date",
 
 Now we can put all the data into the table!
 
-```{r cover-write}
-knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
+```{r write, eval = FALSE}
 
 dbWriteTable(field_db, "cover", cover, append = TRUE)
 ```
 
 Finally, we can check that it all worked by making a query.
 
-```{r cover-query}
-knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
+```{r query, eval = FALSE}
 
 dbGetQuery(field_db, "SELECT * FROM cover LIMIT 10;")
 ```
 
 Now let's do it all again for the functional group table.
 
-```{r fg}
-knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
+```{r fg, eval = FALSE}
 
 functional_group <- read.csv("/Users/elanafeldman/Documents/USUClasses/Thesis_Code/Field22/functional_group.csv")
 

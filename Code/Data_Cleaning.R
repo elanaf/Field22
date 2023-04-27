@@ -7,6 +7,8 @@ library(dplyr)
 View(fb)
 View(ul)
 
+##Note: I have a slightly cleaner, though not shorter, way of changing all my column values
+#in my bookdown for Reproducible Data Science. I can decide later if that would be better to publish
 ####fix FB####
 glimpse(fb)
 
