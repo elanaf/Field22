@@ -223,8 +223,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb32-19"><a href="visualizing-my-data.html#cb32-19" aria-hidden="true" tabindex="-1"></a>                  <span class="st">&quot;Invasive&quot;</span>, <span class="st">&quot;Native&quot;</span>)) <span class="sc">%&gt;%</span>  <span class="co">#make a new column for species status</span></span>
 <span id="cb32-20"><a href="visualizing-my-data.html#cb32-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Block, Plot, Status) <span class="sc">%&gt;%</span> <span class="co">#group by the plot and species status</span></span>
 <span id="cb32-21"><a href="visualizing-my-data.html#cb32-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">PC =</span> <span class="fu">sum</span>(Percent_Cover, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="co">#calculate totals</span></span></code></pre></div>
-<pre><code>## `summarise()` has grouped output by &#39;Block&#39;, &#39;Plot&#39;. You
-## can override using the `.groups` argument.</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;Block&#39;, &#39;Plot&#39;. You can override using the
+## `.groups` argument.</code></pre>
 <div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="visualizing-my-data.html#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Check out the results</span></span>
 <span id="cb34-2"><a href="visualizing-my-data.html#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(graph_data)</span></code></pre></div>
 <pre><code>## # A tibble: 6 × 4
@@ -315,8 +315,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb39-16"><a href="visualizing-my-data.html#cb39-16" aria-hidden="true" tabindex="-1"></a>                    <span class="st">&quot;Invasive&quot;</span>, <span class="st">&quot;Native&quot;</span>)) <span class="sc">%&gt;%</span> </span>
 <span id="cb39-17"><a href="visualizing-my-data.html#cb39-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Block, Plot, Status) <span class="sc">%&gt;%</span></span>
 <span id="cb39-18"><a href="visualizing-my-data.html#cb39-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">PC =</span> <span class="fu">sum</span>(Percent_Cover, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code></pre></div>
-<pre><code>## `summarise()` has grouped output by &#39;Block&#39;, &#39;Plot&#39;. You
-## can override using the `.groups` argument.</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;Block&#39;, &#39;Plot&#39;. You can override using the
+## `.groups` argument.</code></pre>
 <div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="visualizing-my-data.html#cb41-1" aria-hidden="true" tabindex="-1"></a>graph_data2 <span class="ot">&lt;-</span> graph_data2 <span class="sc">%&gt;%</span> </span>
 <span id="cb41-2"><a href="visualizing-my-data.html#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Plot =</span> <span class="fu">case_when</span>(</span>
 <span id="cb41-3"><a href="visualizing-my-data.html#cb41-3" aria-hidden="true" tabindex="-1"></a>    Plot <span class="sc">==</span> <span class="st">&quot;1H&quot;</span> <span class="sc">~</span> <span class="st">&quot;Perennial forbs (high)&quot;</span>,</span>
