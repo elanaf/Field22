@@ -1,7 +1,7 @@
 # Visualizing my data
 
 ## Overview of Chapter
-Now that my data is clean, I can start to make graphs to find the story! For my thesis, I am interested in seeing differences in invasive plant cover as a result of the seed mix used in the plot. To do this, I will make a graph that includes invasive and native cover and look for relationships between the two.
+Now that my data is clean, I can start to make graphs to find the story! For my thesis, I am interested in seeing differences in invasive plant cover as a result of the seed mix used in the plot. To do this, I will make a graph that includes invasive and native cover by seed mix. 
 
 ## Organizing the data
 Currently, I have one column for each species seen in the field. However, I want to graph the total cover for all native and invasive plants seen in the plots. But how do I know which ones are native? To start, I need to change my data from wide format to long format and make a new column that identifies which species is native and which is invasive. Plus, I only need to know this information for the last sampling date. 
@@ -40,7 +40,7 @@ head(graph_data)
 This all looks good! Now we have summed values of all the native and invasive cover for each plot for the last sampling date. Let's go ahead and graph!
 
 ## Graphing the data
-Now, let's graph up the values we calculate for invasive and native cover at each plot. For the first order of business, I want to replace all the names of the plots from my research codes to codes that will make sense to a wider audience.
+Now, let's graph up the values we calculated for invasive and native cover at each plot. For the first order of business, I want to replace all the names of the plots from my research codes to codes that will make sense to a wider audience.
 
 ```{r plots}
 graph_data <- graph_data %>% 
@@ -88,7 +88,7 @@ fb_plot <- graph_data %>%
 
 fb_plot
 ```
-### Utah Lake Data
+
 Now we can do it all again with the Utah Lake data.
 
 ```{r utah lake}
