@@ -163,9 +163,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3" data-path="cleaning-my-data.html"><a href="cleaning-my-data.html"><i class="fa fa-check"></i><b>3</b> Cleaning my data</a>
 <ul>
 <li class="chapter" data-level="3.1" data-path="cleaning-my-data.html"><a href="cleaning-my-data.html#overview-of-the-chapter"><i class="fa fa-check"></i><b>3.1</b> Overview of the Chapter</a></li>
-<li class="chapter" data-level="3.2" data-path="cleaning-my-data.html"><a href="cleaning-my-data.html#overview-of-my-data"><i class="fa fa-check"></i><b>3.2</b> Overview of My Data</a></li>
-<li class="chapter" data-level="3.3" data-path="cleaning-my-data.html"><a href="cleaning-my-data.html#importing-the-data"><i class="fa fa-check"></i><b>3.3</b> Importing the data</a></li>
-<li class="chapter" data-level="3.4" data-path="cleaning-my-data.html"><a href="cleaning-my-data.html#cleaning-the-data"><i class="fa fa-check"></i><b>3.4</b> Cleaning the data</a></li>
+<li class="chapter" data-level="3.2" data-path="cleaning-my-data.html"><a href="cleaning-my-data.html#importing-the-data"><i class="fa fa-check"></i><b>3.2</b> Importing the data</a></li>
+<li class="chapter" data-level="3.3" data-path="cleaning-my-data.html"><a href="cleaning-my-data.html#cleaning-the-data"><i class="fa fa-check"></i><b>3.3</b> Cleaning the data</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="visualizing-my-data.html"><a href="visualizing-my-data.html"><i class="fa fa-check"></i><b>4</b> Visualizing my data</a>
 <ul>
@@ -198,7 +197,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1><span class="header-section-number">Chapter 4</span> Visualizing my data<a href="visualizing-my-data.html#visualizing-my-data" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <div id="overview-of-chapter" class="section level2 hasAnchor" number="4.1">
 <h2><span class="header-section-number">4.1</span> Overview of Chapter<a href="visualizing-my-data.html#overview-of-chapter" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>Now that my data is clean, I can start to make graphs to find the story! For my thesis, I am interested in seeing differences in invasive plant cover as a result of the seed mix used in the plot. To do this, I will make a graph that includes invasive and native cover and look for relationships between the two.</p>
+<p>Now that my data is clean, I can start to make graphs to find the story! For my thesis, I am interested in seeing differences in invasive plant cover as a result of the seed mix used in the plot. To do this, I will make a graph that includes invasive and native cover by seed mix.</p>
 </div>
 <div id="organizing-the-data" class="section level2 hasAnchor" number="4.2">
 <h2><span class="header-section-number">4.2</span> Organizing the data<a href="visualizing-my-data.html#organizing-the-data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
@@ -242,7 +241,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="graphing-the-data" class="section level2 hasAnchor" number="4.3">
 <h2><span class="header-section-number">4.3</span> Graphing the data<a href="visualizing-my-data.html#graphing-the-data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>Now, let’s graph up the values we calculate for invasive and native cover at each plot. For the first order of business, I want to replace all the names of the plots from my research codes to codes that will make sense to a wider audience.</p>
+<p>Now, let’s graph up the values we calculated for invasive and native cover at each plot. For the first order of business, I want to replace all the names of the plots from my research codes to codes that will make sense to a wider audience.</p>
 <div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="visualizing-my-data.html#cb36-1" aria-hidden="true" tabindex="-1"></a>graph_data <span class="ot">&lt;-</span> graph_data <span class="sc">%&gt;%</span> </span>
 <span id="cb36-2"><a href="visualizing-my-data.html#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Plot =</span> <span class="fu">case_when</span>(</span>
 <span id="cb36-3"><a href="visualizing-my-data.html#cb36-3" aria-hidden="true" tabindex="-1"></a>    Plot <span class="sc">==</span> <span class="st">&quot;1H&quot;</span> <span class="sc">~</span> <span class="st">&quot;Perennial forbs (high)&quot;</span>,</span>
@@ -296,9 +295,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb38-15"><a href="visualizing-my-data.html#cb38-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="fl">0.9</span>)) </span>
 <span id="cb38-16"><a href="visualizing-my-data.html#cb38-16" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb38-17"><a href="visualizing-my-data.html#cb38-17" aria-hidden="true" tabindex="-1"></a>fb_plot</span></code></pre></div>
-<p><img src="_main_files/figure-html/graph-1.png" width="672" />
-### Utah Lake Data
-Now we can do it all again with the Utah Lake data.</p>
+<p><img src="_main_files/figure-html/graph-1.png" width="672" /></p>
+<p>Now we can do it all again with the Utah Lake data.</p>
 <div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="visualizing-my-data.html#cb39-1" aria-hidden="true" tabindex="-1"></a>graph_data2 <span class="ot">&lt;-</span> ul<span class="sc">%&gt;%</span></span>
 <span id="cb39-2"><a href="visualizing-my-data.html#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Block, Plot, Group, Density, Date, PHAU, BOMA, BICE, CYER, RUMA,</span>
 <span id="cb39-3"><a href="visualizing-my-data.html#cb39-3" aria-hidden="true" tabindex="-1"></a>         Cheno, SCAC, SCPU, SCAM, DISP, RACY, ASIN, ALPR, CYDA, Unk_Bulrush, BY, SYCI,</span>
