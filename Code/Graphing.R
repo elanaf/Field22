@@ -1,5 +1,4 @@
 load("clean_dfs.RData")
-library(ggplot2)
 library(tidyverse)
 library(RColorBrewer)
 
@@ -40,11 +39,14 @@ graph_data <-fb %>%
     names_to = "SPP",
     values_to = "Percent_Cover"
   ) %>% #pivot so that all species names are in one column
-  mutate(Status = 
-           dplyr::if_else(
-             SPP %in%
-               c("PHAU", "Typha", "RUST", "Tamarisk"), 
-             "Invasive", "Native")) %>%  #make a new column for species status
+  mutate(Status = case_when(
+    SPP %in% c("PHAU", "TYPHA", "RUST", "Tamarisk") ~ "Invasive",
+    SPP %in% c("BOMA", "SCAC", "SCAM") & Group == 4 ~ "Seeded",
+    SPP %in% c("DISP", "MUAS") & Group == 3 ~ "Seeded",
+    SPP %in% c("EUOC", "EUMA") & Group == 1 ~ "Seeded",
+    SPP %in% c("SYCI", "BICE", "RUMA") & Group == 5 ~ "Seeded",
+    TRUE ~ "Native"
+  ))%>%  #make a new column for species status
   group_by(Block, Plot, Status) %>% #group by the plot and species status
   summarise(PC = sum(Percent_Cover, na.rm = TRUE)) #calculate totals
 
@@ -137,6 +139,51 @@ ggsave(filename = "Fb_plot.jpeg",
        height = 5,
        device = "jpeg")
 
+# Stacked barchart of everything that came up ####
+
+fb_long <- fb %>%
+  filter(Date == "2022-09-16") %>% 
+  select(Block:Tamarisk) %>% 
+  tidyr::pivot_longer(
+    cols = PHAU:Tamarisk,
+    names_to = "species",
+    values_to = "cover"
+  ) %>% 
+  filter(species %in% c("EUOC", "EUMA", "SOCA",
+                        "JUAR", "JUTO", "JUGE",
+                        "DISP", "MUAS", "PUNU",
+                        "BOMA", "SCAC", "SCAM",
+                        "SYCI", "BICE", "RUMA")) %>% 
+  mutate(Plot = case_when(
+    Plot == "1H" ~ "Perennial forbs (high)",
+    Plot == "1L" ~ "Perennial forbs (low)",
+    Plot == "2H" ~ "Rushes (high)",
+    Plot == "2L" ~ "Rushes (low)",
+    Plot == "3H" ~ "Grasses (high)",
+    Plot == "3L" ~ "Grasses (low)",
+    Plot == "4H" ~ "Bulrushes (high)",
+    Plot == "4L" ~ "Bulrushes (low)",
+    Plot == "5H" ~ "Annual forbs (high)",
+    Plot == "5L" ~ "Annual forbs (low)",
+    Plot == "C" ~ "Control",
+    TRUE ~ "PROBLEM"
+  )) %>% 
+  group_by(Plot, species) %>% 
+  summarize(mean_cover = mean(cover, na.rm = TRUE))
+
+fb_long %>%
+  ggplot(aes(fill = species, y = mean_cover, x = Plot)) +
+  geom_bar(position = "fill", stat = "identity") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 0.9))
+
+ggsave("stacked_barchart_fb.jpeg")
+
+#EUOC increased with seeding high, EUMA increased with seeding low
+#No effect of seeding on Juncus
+#Effect of seeding on SCAC and SCAM but not BOMA 
+#Maybe an effect of seeding on DISP
+#Effect of Seeding on BICE, RUMA, and SYCI
+
  ####UL####
 ####General graph####
 #trt x control to see how they look compared to the control 
@@ -171,12 +218,16 @@ graph_data2 <- ul%>%
     names_to = "SPP",
     values_to = "Percent_Cover"
   ) %>% 
-  mutate(Status = 
-           dplyr::if_else(
-             SPP %in%
-               c("PHAU", "TYPHA", "RUST", "Tamarisk", "ALPR", "CYDA", "BY", 
-                 "BASC", "LASE"), 
-             "Invasive", "Native")) %>% 
+  mutate(Status = case_when(
+    SPP %in% c("PHAU", "TYPHA", "RUST", 
+               "Tamarisk", "ALPR", "CYDA", "BY", 
+               "BASC", "LASE") ~ "Invasive",
+    SPP %in% c("BOMA", "SCAC", "SCAM") & Group == 4 ~ "Seeded",
+    SPP == "DISP" & Group == 3 ~ "Seeded",
+    SPP == "EUOC" & Group == 1 ~ "Seeded",
+    SPP %in% c("SYCI", "BICE", "RUMA") & Group == 5 ~ "Seeded",
+    TRUE ~ "Native"
+  ))%>% 
   group_by(Block, Plot, Status) %>%
   summarise(PC = sum(Percent_Cover, na.rm = TRUE))
 
@@ -216,8 +267,9 @@ ul_plot
 
 library(patchwork)
 fb_plot + ul_plot
+ggsave("native_seeded_invasive_cover.jpeg")
 
-##### Graph of all the plots and total cover - split invasive and native ####
+#Graph of all the plots and total cover - split invasive and native ####
 ul_split$plot_names <- factor(ul_split$plot_names, 
                               levels = c("Annual forbs (high)", "Annual forbs (low)", "Perennial forbs (high)", "Perennial forbs (low)",
                                          "Bulrushes (high)", "Bulrushes (low)","Rushes (high)", "Rushes (low)","Grasses (high)", "Grasses (low)", 
@@ -297,3 +349,49 @@ ggsave(filename = "Ul_plot.jpeg",
        width = 8,
        height = 5,
        device = "jpeg")
+
+
+# Stacked barchart of everything that came up ####
+
+ul_long <- ul %>%
+  filter(Date == "2022-09-16") %>% 
+  select(Block:LASE) %>% 
+  tidyr::pivot_longer(
+    cols = Unk_Forb:LASE,
+    names_to = "species",
+    values_to = "cover"
+  ) %>% 
+  filter(species %in% c("EUOC", "EUMA", "SOCA",
+                        "JUAR", "JUTO", "JUGE",
+                        "DISP", "MUAS", "PUNU",
+                        "BOMA", "SCAC", "SCAM",
+                        "SYCI", "BICE", "RUMA")) %>% 
+  mutate(Plot = case_when(
+    Plot == "1H" ~ "Perennial forbs (high)",
+    Plot == "1L" ~ "Perennial forbs (low)",
+    Plot == "2H" ~ "Rushes (high)",
+    Plot == "2L" ~ "Rushes (low)",
+    Plot == "3H" ~ "Grasses (high)",
+    Plot == "3L" ~ "Grasses (low)",
+    Plot == "4H" ~ "Bulrushes (high)",
+    Plot == "4L" ~ "Bulrushes (low)",
+    Plot == "5H" ~ "Annual forbs (high)",
+    Plot == "5L" ~ "Annual forbs (low)",
+    Plot == "C" ~ "Control",
+    TRUE ~ "PROBLEM"
+  )) %>% 
+  group_by(Plot, species) %>% 
+  summarize(mean_cover = mean(cover, na.rm = TRUE))
+
+ul_long %>%
+  ggplot(aes(fill = species, y = mean_cover, x = Plot)) +
+  geom_bar(position = "fill", stat = "identity") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 0.9))
+
+#No effect of seeding on perennial forbs
+#No effect of seeding on Juncus
+#Seeding maybe increased BOMA, but not SCAC and SCAM
+#DISP increased for high grasses
+#No effect of seeding on annual forbs
+
+ggsave("stacked_barchart_ul.jpeg")
