@@ -257,7 +257,7 @@ fb2 <-fb %>%
     SPP %in% c("BOMA", "SCAC", "SCAM") & Group == 4 ~ "Seeded",
     SPP %in% c("DISP", "MUAS") & Group == 3 ~ "Seeded",
     SPP %in% c("EUOC", "EUMA") & Group == 1 ~ "Seeded",
-    SPP %in% c("SYCI", "BICE", "RUMA") & Group == 5 ~ "Seeded",
+    SPP %in% c("SYCI", "BICE", "RUMA", "BIFR") & Group == 5 ~ "Seeded",
     TRUE ~ "Native"))%>%  #make a new column for species status
   group_by(Block, Plot, Density, Group, Status) %>% #group by the plot and species status
   summarise(PC = sum(Percent_Cover, na.rm = TRUE)) %>%  #calculate totals
