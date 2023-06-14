@@ -6,6 +6,7 @@ library(emmeans)
 library(car)
 library(multcompView)
 library(gridExtra)
+library(multcomp)
 options(contrasts = c("contr.sum", "contr.poly"))
 
 fb$Group <- as.factor(fb$Group)
@@ -19,7 +20,7 @@ ul$Density <- as.factor(ul$Density)
 #only need the last date
 mdf <- fb %>%
   filter(Date == "2022-09-16") %>%
-  select(Block, Group, Density, Date, Invasive.Cover, Native.Cover)
+  dplyr::select(Block, Group, Density, Date, Invasive.Cover, Native.Cover)
 
 useData <- filter(mdf, Density != "C") #to make the plotResiduals work
 useData$Group <- factor(useData$Group)
@@ -108,13 +109,43 @@ car::Anova(mdf.m4) #no interaction but densities different and at least one grou
 
 emmip(mdf.m4, Group~Density, CIs = T, type = "response") #shows on the level of the response
 
-emmeans(mdf.m4, pairwise~Group) #only 4 and 5 different when adjusted for tukey
-emmeans(mdf.m4, pairwise~Group, adjust = "none") #same as with the tukey
-#seems like trt 4 had lower cover overall compared to trt 5 but neither are different from the control so idk
+emmeans(mdf.m4, pairwise~Group, type = "response") #only 4 and 5 different when adjusted for tukey
+emmeans(mdf.m4, pairwise~Group, adjust = "none", type = "response") #same as with the tukey
+#seems like trt 4 had higher cover overall compared to trt 5 but neither are different from the control so idk
 
-emmeans(mdf.m4, pairwise~Density) #not significant but almost significant when adjusted for with tukey
+emmeans(mdf.m4, pairwise~Density, type = "response") #not significant but almost significant when adjusted for with tukey
 emmeans(mdf.m4, pairwise~Density, adjust = "none") #same p-value with the more liberal test
 #also, low density seems to have higher invasive cover than high density, but again neither different from the control 
+
+emm4a <- emmeans(mdf.m4, pairwise~Group, type = "response", adjust = 'tukey')
+data4a <- multcomp::cld(emm4a, alpha = 0.1, Letters = letters)
+#this is not showing what I want it to show and idk 
+
+ggplot(data = data4a, aes(x = Group, y = response * 100)) +
+  geom_point(size=2) +
+  geom_errorbar(aes(ymin = 100*(response - SE),
+                    ymax = 100*(response+SE)),
+                width=0, size=0.5) +
+  labs(x="Seed Mix", y = "Model predicted percent cover") +
+  geom_text(aes(label = .group,  y = response * 100),
+            nudge_x = 0.2)
+
+ggsave("model_means_total_invasive_fb_mix.jpeg")
+
+emm4b <- emmeans(mdf.m4, pairwise~Density, type = "response", adjust = 'tukey')
+data4b <- multcomp::cld(emm4b, alpha = 0.1, Letters = letters)
+#this is not showing what I want it to show and idk 
+
+ggplot(data = data4b, aes(x = Density, y = response * 100)) +
+  geom_point(size=2) +
+  geom_errorbar(aes(ymin = 100*(response - SE),
+                    ymax = 100*(response+SE)),
+                width=0, size=0.5) +
+  labs(x="Seed Mix", y = "Model predicted percent cover") +
+  geom_text(aes(label = .group,  y = response * 100),
+            nudge_x = 0.2)
+
+ggsave("model_means_total_invasive_fb_density.jpeg")
 
 #UL ####
 mdf1 <- ul %>%
@@ -140,6 +171,21 @@ plotResiduals(mdf.m5, form= mdf$gd)
 
 emmeans(mdf.m5, specs = trt.vs.ctrlk~gd,ref = 3) #reference group is the third option (10:C)
 #no significant differences, just a slight different with 4H
+
+emm5 <- emmeans(mdf.m5, specs = trt.vs.ctrlk~gd,ref = 3, type = "response", adjust = 'tukey')
+data5 <- multcomp::cld(emm5, alpha = 0.1, Letters = letters)
+#this is not showing what I want it to show and idk 
+
+ggplot(data = data5, aes(x = gd, y = response * 100)) +
+  geom_point(size=2) +
+  geom_errorbar(aes(ymin = 100*(response - SE),
+                    ymax = 100*(response+SE)),
+                width=0, size=0.5) +
+  labs(x="Seed Mix", y = "Model predicted percent cover") +
+  geom_text(aes(label = .group,  y = response * 100),
+            nudge_x = 0.2)
+
+ggsave("model_means_dunnetts_invasive_ul.jpeg")
 
 ##UL Invasive ####
 mdf.m6 <- glmmTMB(Invasive.Cover ~ Group * Density #* for interaction
@@ -296,7 +342,6 @@ emmeans(mdf.m1, pairwise~Density, type = "response", adjust = "tukey")
 #marginally significant differences in density - higher seeded cover in high density than low density
 
 ###how to add the letters to a graph ####
-library(multcomp)
 emm1 <- emmeans(mdf.m1, pairwise~Group, CIs = T, type = 'response', adjust = 'tukey')
 data1 <- multcomp::cld(emm1, alpha = 0.1, Letters = letters)
 
