@@ -45,6 +45,9 @@ fb$Total.Cover[fb$Total.Cover == 70.00] <- 75.00
 fb$Total.Cover <- as.double(fb$Total.Cover)
 fb$Total.Cover <- fb$Total.Cover/100
 
+#all NAs should actually be 0s
+fb$Total.Cover[is.na(fb$Total.Cover) ]<- 0
+
 #now do it for all the other columns
 unique(fb$PHAU)
 fb$PHAU[fb$PHAU == "<1"] <- "0.5"
@@ -52,6 +55,7 @@ fb$PHAU[fb$PHAU == 1.00] <- 5.00
 fb$PHAU[fb$PHAU == 10.00] <- 15.00
 fb$PHAU <- as.double(fb$PHAU)
 fb$PHAU <- fb$PHAU/100
+fb$PHAU[is.na(fb$PHAU)] <- 0
 
 unique(fb$Cheno)
 fb$Cheno[fb$Cheno == "<1"] <- "0.5"
@@ -61,6 +65,7 @@ fb$Cheno[fb$Cheno == 20.00] <- 25.00
 fb$Cheno[fb$Cheno == 30.00] <- 35.00
 fb$Cheno <- as.double(fb$Cheno)
 fb$Cheno <- fb$Cheno/100
+fb$Cheno[is.na(fb$Cheno)] <- 0
 
 unique(fb$Typha)
 fb$Typha[fb$Typha == "<1"] <- "0.5"
@@ -68,6 +73,7 @@ fb$Typha[fb$Typha == 1.00] <- 5.00
 fb$Typha[fb$Typha == 10.00] <- 15.00
 fb$Typha <- as.double(fb$Typha)
 fb$Typha <- fb$Typha/100
+fb$Typha[is.na(fb$Typha)] <- 0
 
 unique(fb$BOMA)
 fb$BOMA[fb$BOMA == "<1"] <- "0.5"
@@ -76,6 +82,7 @@ fb$BOMA[fb$BOMA == 10.00] <- 15.00
 fb$BOMA[fb$BOMA == 20.00] <- 25.00
 fb$BOMA <- as.double(fb$BOMA)
 fb$BOMA <- fb$BOMA/100
+fb$BOMA[is.na(fb$BOMA)] <- 0
 
 unique(fb$DISP)
 fb$DISP[fb$DISP == "<1"] <- "0.5"
@@ -88,12 +95,14 @@ fb$DISP[fb$DISP == 50.00] <- 55.00
 fb$DISP[fb$DISP == 60.00] <- 65.00
 fb$DISP <- as.double(fb$DISP)
 fb$DISP <- fb$DISP/100
+fb$DISP[is.na(fb$DISP)] <- 0
 
 unique(fb$EUMA)
 fb$EUMA[fb$EUMA == "<1"] <- "0.5"
 fb$EUMA[fb$EUMA == 1.00] <- 5.00
 fb$EUMA <- as.double(fb$EUMA)
 fb$EUMA <- fb$EUMA/100
+fb$EUMA[is.na(fb$EUMA)] <- 0
 
 unique(fb$SYCI)
 fb$SYCI[fb$SYCI == "<1"] <- "0.5"
@@ -101,6 +110,7 @@ fb$SYCI[fb$SYCI == 1.00] <- 5.00
 fb$SYCI[fb$SYCI == 10.00] <- 15.00
 fb$SYCI <- as.double(fb$SYCI)
 fb$SYCI <- fb$SYCI/100
+fb$SYCI[is.na(fb$SYCI)] <- 0
 
 unique(fb$LEFA)
 fb$LEFA[fb$LEFA == "<1"] <- "0.5"
@@ -109,12 +119,14 @@ fb$LEFA[fb$LEFA == 10.00] <- 15.00
 fb$LEFA[fb$LEFA == 20.00] <- 25.00
 fb$LEFA <- as.double(fb$LEFA)
 fb$LEFA <- fb$LEFA/100
+fb$LEFA[is.na(fb$LEFA)] <- 0
 
 unique(fb$SCAC)
 fb$SCAC[fb$SCAC == "<1"] <- "0.5"
 fb$SCAC[fb$SCAC == 1.00] <- 5.00
 fb$SCAC <- as.double(fb$SCAC)
 fb$SCAC <- fb$SCAC/100
+fb$SCAC[is.na(fb$SCAC)] <- 0
 
 unique(fb$BICE)
 fb$BICE[fb$BICE == "<1"] <- "0.5"
@@ -122,34 +134,40 @@ fb$BICE[fb$BICE == 1.00] <- 5.00
 fb$BICE[fb$BICE == 10.00] <- 15.00
 fb$BICE <- as.double(fb$BICE)
 fb$BICE <- fb$BICE/100
+fb$BICE[is.na(fb$BICE)] <- 0
 
 unique(fb$BIFR)
 fb$BIFR[fb$BIFR == "<1"] <- "0.5"
 fb$BIFR[fb$BIFR == 1.00] <- 5.00
 fb$BIFR <- as.double(fb$BIFR)
 fb$BIFR <- fb$BIFR/100
+fb$BIFR[is.na(fb$BIFR)] <- 0
 
 unique(fb$EUOC)
 fb$EUOC[fb$EUOC == 1.00] <- 5.00
 fb$EUOC <- as.double(fb$EUOC)
 fb$EUOC <- fb$EUOC/100
+fb$EUOC[is.na(fb$EUOC)] <- 0
 
 unique(fb$MUAS)
 fb$MUAS[fb$MUAS == 1.00] <- 5.00
 fb$MUAS[fb$MUAS == 10.00] <- 15.00
 fb$MUAS <- as.double(fb$MUAS)
 fb$MUAS <- fb$MUAS/100
+fb$MUAS[is.na(fb$MUAS)] <- 0
 
 unique(fb$SCAM)
 fb$SCAM[fb$SCAM == 1.00] <- 5.00
 fb$SCAM <- as.double(fb$SCAM)
 fb$SCAM <- fb$SCAM/100
+fb$SCAM[is.na(fb$SCAM)] <- 0
 
 unique(fb$RUMA)
 fb$RUMA[fb$RUMA == "<1"] <- "0.5"
 fb$RUMA[fb$RUMA == 1.00] <- 5.00
 fb$RUMA <- as.double(fb$RUMA)
 fb$RUMA <- fb$RUMA/100
+fb$RUMA[is.na(fb$RUMA)] <- 0
 
 unique(fb$RUST)
 fb$RUST[fb$RUST == "<1"] <- "0.5"
@@ -157,18 +175,21 @@ fb$RUST[fb$RUST == 1.00] <- 5.00
 fb$RUST[fb$RUST == 10.00] <- 15.00
 fb$RUST <- as.double(fb$RUST)
 fb$RUST <- fb$RUST/100
+fb$RUST[is.na(fb$RUST)] <- 0
 
 unique(fb$Unk_Forb)
 fb$Unk_Forb[fb$Unk_Forb == "<1"] <- "0.5"
 fb$Unk_Forb[fb$Unk_Forb == 1.00] <- 5.00
 fb$Unk_Forb <- as.double(fb$Unk_Forb)
 fb$Unk_Forb <- fb$Unk_Forb/100
+fb$Unk_Forb[is.na(fb$Unk_Forb)] <- 0
 
 unique(fb$Unk_Grass)
 fb$Unk_Grass[fb$Unk_Grass == "<1"] <- "0.5"
 fb$Unk_Grass[fb$Unk_Grass == 1.00] <- 5.00
 fb$Unk_Grass <- as.double(fb$Unk_Grass)
 fb$Unk_Grass <- fb$Unk_Grass/100
+fb$Unk_Grass[is.na(fb$Unk_Grass)] <- 0
 
 unique(fb$Unk_Rush)
 fb$Unk_Rush[fb$Unk_Rush == "<1"] <- "0.5"
@@ -176,18 +197,21 @@ fb$Unk_Rush[fb$Unk_Rush == 1.00] <- 5.00
 fb$Unk_Rush <- as.double(fb$Unk_Rush)
 names(fb)[25] <- "Unk_Bulrush"
 fb$Unk_Bulrush <- fb$Unk_Bulrush/100
+fb$Unk_Bulrush[is.na(fb$Unk_Bulrush)] <- 0
 
 unique(fb$SARU)
 fb$SARU[fb$SARU == "<1"] <- "0.5"
 fb$SARU[fb$SARU == 1.00] <- 5.00
 fb$SARU <- as.double(fb$SARU)
 fb$SARU <- fb$SARU/100
+fb$SARU[is.na(fb$SARU)] <- 0
 
 unique(fb$Tamarisk)
 fb$Tamarisk[fb$Tamarisk == "<1"] <- "0.5"
 fb$Tamarisk[fb$Tamarisk == 1.00] <- 5.00
 fb$Tamarisk <- as.double(fb$Tamarisk)
 fb$Tamarisk <- fb$Tamarisk/100
+fb$Tamarisk[is.na(fb$Tamarisk)] <- 0
 
 glimpse(fb)
 
@@ -262,6 +286,7 @@ ul$Total.Cover[ul$Total.Cover == 80.00] <- 85.00
 ul$Total.Cover[ul$Total.Cover == 90.00] <- 95.00
 ul$Total.Cover <- as.double(ul$Total.Cover)
 ul$Total.Cover <- ul$Total.Cover/100
+ul$Total.Cover[is.na(ul$Total.Cover)] <- 0
 
 names(ul)[7] <- "Unk_Forb" #fix the name
 unique(ul$Unk_Forb)
@@ -269,6 +294,7 @@ ul$Unk_Forb[ul$Unk_Forb == "<1"] <- "0.5"
 ul$Unk_Forb[ul$Unk_Forb == 1.00] <- 5.00
 ul$Unk_Forb <- as.double(ul$Unk_Forb)
 ul$Unk_Forb <- ul$Unk_Forb/100
+ul$Unk_Forb[is.na(ul$Unk_Forb)] <- 0
 
 unique(ul$PHAU)
 ul$PHAU[ul$PHAU == "<1"] <- "0.5"
@@ -276,6 +302,7 @@ ul$PHAU[ul$PHAU == 1.00] <- 5.00
 ul$PHAU[ul$PHAU == 10.00] <- 15.00
 ul$PHAU <- as.double(ul$PHAU)
 ul$PHAU <- ul$PHAU/100
+ul$PHAU[is.na(ul$PHAU)] <- 0
 
 unique(ul$Unk_Sedge)
 ul$Unk_Sedge[ul$Unk_Sedge == "<1"] <- "0.5"
@@ -286,6 +313,7 @@ ul$Unk_Sedge[ul$Unk_Sedge == 30.00] <- 35.00
 ul$Unk_Sedge[ul$Unk_Sedge == 40.00] <- 45.00
 ul$Unk_Sedge <- as.double(ul$Unk_Sedge)
 ul$Unk_Sedge <- ul$Unk_Sedge/100
+ul$Unk_Sedge[is.na(ul$Unk_Sedge)] <- 0
 
 unique(ul$BOMA)
 ul$BOMA[ul$BOMA == "<1"] <- "0.5"
@@ -297,6 +325,7 @@ ul$BOMA[ul$BOMA == 40.00] <- 45.00
 ul$BOMA[ul$BOMA == 50.00] <- 55.00
 ul$BOMA <- as.double(ul$BOMA)
 ul$BOMA <- ul$BOMA/100
+ul$BOMA[is.na(ul$BOMA)] <- 0
 
 unique(ul$BICE)
 ul$BICE[ul$BICE == 1.00] <- 5.00
@@ -305,6 +334,7 @@ ul$BICE[ul$BICE == 20.00] <- 25.00
 ul$BICE[ul$BICE == 30.00] <- 35.00
 ul$BICE <- as.double(ul$BICE)
 ul$BICE <- ul$BICE/100
+ul$BICE[is.na(ul$BICE)] <- 0
 
 unique(ul$CYER)
 ul$CYER[ul$CYER == 1.00] <- 5.00
@@ -316,6 +346,7 @@ ul$CYER[ul$CYER == 60.00] <- 65.00
 ul$CYER[ul$CYER == 70.00] <- 75.00
 ul$CYER <- as.double(ul$CYER)
 ul$CYER <- ul$CYER/100
+ul$CYER[is.na(ul$CYER)] <- 0
 
 unique(ul$RUMA)
 ul$RUMA[ul$RUMA == "<1"] <- "0.5"
@@ -330,18 +361,21 @@ ul$RUMA[ul$RUMA == 70.00] <- 75.00
 ul$RUMA[ul$RUMA == 80.00] <- 85.00
 ul$RUMA <- as.double(ul$RUMA)
 ul$RUMA <- ul$RUMA/100
+ul$RUMA[is.na(ul$RUMA)] <- 0
 
 unique(ul$BASC)
 ul$BASC[ul$BASC == 1.00] <- 5.00
 ul$BASC[ul$BASC == 10.00] <- 15.00
 ul$BASC <- as.double(ul$BASC)
 ul$BASC <- ul$BASC/100
+ul$BASC[is.na(ul$BASC)] <- 0
 
 unique(ul$LASE)
 ul$LASE[ul$LASE == 1.00] <- 5.00
 ul$LASE[ul$LASE == 10.00] <- 15.00
 ul$LASE <- as.double(ul$LASE)
 ul$LASE <- ul$LASE/100
+ul$LASE[is.na(ul$LASE)] <- 0
 
 unique(ul$Cheno)
 ul$Cheno[ul$Cheno == "<1"] <- "0.5"
@@ -353,18 +387,21 @@ ul$Cheno[ul$Cheno == 40.00] <- 45.00
 ul$Cheno[ul$Cheno == 50.00] <- 55.00
 ul$Cheno <- as.double(ul$Cheno)
 ul$Cheno <- ul$Cheno/100
+ul$Cheno[is.na(ul$Cheno)] <- 0
 
 unique(ul$SCAC)
 ul$SCAC[ul$SCAC == "<1"] <- "0.5"
 ul$SCAC[ul$SCAC == 1.00] <- 5.00
 ul$SCAC <- as.double(ul$SCAC)
 ul$SCAC <- ul$SCAC/100
+ul$SCAC[is.na(ul$SCAC)] <- 0
 
 unique(ul$SCPU)
 ul$SCPU[ul$SCPU == "<1"] <- "0.5"
 ul$SCPU[ul$SCPU == 1.00] <- 5.00
 ul$SCPU <- as.double(ul$SCPU)
 ul$SCPU <- ul$SCPU/100
+ul$SCPU[is.na(ul$SCPU)] <- 0
 
 unique(ul$SCAM)
 ul$SCAM[ul$SCAM == "<1"] <- "0.5"
@@ -372,6 +409,7 @@ ul$SCAM[ul$SCAM == 1.00] <- 5.00
 ul$SCAM[ul$SCAM == 10.00] <- 15.00
 ul$SCAM <- as.double(ul$SCAM)
 ul$SCAM <- ul$SCAM/100
+ul$SCAM[is.na(ul$SCAM)] <- 0
 
 unique(ul$DISP)
 ul$DISP[ul$DISP == "<1"] <- "0.5"
@@ -379,18 +417,21 @@ ul$DISP[ul$DISP == 1.00] <- 5.00
 ul$DISP[ul$DISP == 10.00] <- 15.00
 ul$DISP <- as.double(ul$DISP)
 ul$DISP <- ul$DISP/100
+ul$DISP[is.na(ul$DISP)] <- 0
 
 unique(ul$RACY)
 ul$RACY[ul$RACY == "<1"] <- "0.5"
 ul$RACY[ul$RACY == 1.00] <- 5.00
 ul$RACY <- as.double(ul$RACY)
 ul$RACY <- ul$RACY/100
+ul$RACY[is.na(ul$RACY)] <- 0
 
 unique(ul$ASIN)
 ul$ASIN[ul$ASIN == "<1"] <- "0.5"
 ul$ASIN[ul$ASIN == 1.00] <- 5.00
 ul$ASIN <- as.double(ul$ASIN)
 ul$ASIN <- ul$ASIN/100
+ul$ASIN[is.na(ul$ASIN)] <- 0
 
 unique(ul$Unk_Grass)
 ul$Unk_Grass[ul$Unk_Grass == "<1"] <- "0.5"
@@ -399,6 +440,7 @@ ul$Unk_Grass[ul$Unk_Grass == 10.00] <- 15.00
 ul$Unk_Grass[ul$Unk_Grass == 20.00] <- 25.00
 ul$Unk_Grass <- as.double(ul$Unk_Grass)
 ul$Unk_Grass <- ul$Unk_Grass/100
+ul$Unk_Grass[is.na(ul$Unk_Grass)] <- 0
 
 unique(ul$ALPR)
 ul$ALPR[ul$ALPR == "<1"] <- "0.5"
@@ -407,41 +449,48 @@ ul$ALPR[ul$ALPR == 10.00] <- 15.00
 ul$ALPR[ul$ALPR == 20.00] <- 25.00
 ul$ALPR <- as.double(ul$ALPR)
 ul$ALPR <- ul$ALPR/100
+ul$ALPR[is.na(ul$ALPR)] <- 0
 
 unique(ul$CYDA)
 ul$CYDA[ul$CYDA == 1.00] <- 5.00
 ul$CYDA[ul$CYDA == 10.00] <- 15.00
 ul$CYDA <- as.double(ul$CYDA)
 ul$CYDA <- ul$CYDA/100
+ul$CYDA[is.na(ul$CYDA)] <- 0
 
 unique(ul$POFR)
 ul$POFR[ul$POFR == "<1"] <- "0.5"
 ul$POFR[ul$POFR == 1.00] <- 5.00
 ul$POFR <- as.double(ul$POFR)
 ul$POFR <- ul$POFR/100
+ul$POFR[is.na(ul$POFR)] <- 0
 
 unique(ul$SAAM)
 ul$SAAM[ul$SAAM == "<1"] <- "0.5"
 ul$SAAM[ul$SAAM == 1.00] <- 5.00
 ul$SAAM <- as.double(ul$SAAM)
 ul$SAAM <- ul$SAAM/100
+ul$SAAM[is.na(ul$SAAM)] <- 0
 
 unique(ul$Unk_Bulrush)
 ul$Unk_Bulrush[ul$Unk_Bulrush == "<1"] <- "0.5"
 ul$Unk_Bulrush[ul$Unk_Bulrush == 1.00] <- 5.00
 ul$Unk_Bulrush <- as.double(ul$Unk_Bulrush)
 ul$Unk_Bulrush <- ul$Unk_Bulrush/100
+ul$Unk_Bulrush[is.na(ul$Unk_Bulrush)] <- 0
 
 unique(ul$BY)
 ul$BY[ul$BY == 1.00] <- 5.00
 ul$BY <- as.double(ul$BY)
 ul$BY <- ul$BY/100
+ul$BY[is.na(ul$BY)] <- 0
 
 unique(ul$SYCI)
 ul$SYCI[ul$SYCI == 1.00] <- 5.00
 ul$SYCI[ul$SYCI == 10.00] <- 15.00
 ul$SYCI <- as.double(ul$SYCI)
 ul$SYCI <- ul$SYCI/100
+ul$SYCI[is.na(ul$SYCI)] <- 0
 
 unique(ul$EUOC)
 ul$EUOC[ul$EUOC == "<1"] <- "0.5"
@@ -449,12 +498,14 @@ ul$EUOC[ul$EUOC == 1.00] <- 5.00
 ul$EUOC[ul$EUOC == 10.00] <- 15.00
 ul$EUOC <- as.double(ul$EUOC)
 ul$EUOC <- ul$EUOC/100
+ul$EUOC[is.na(ul$EUOC)] <- 0
 
 unique(ul$TYPHA)
 ul$TYPHA[ul$TYPHA == "<1"] <- "0.5"
 ul$TYPHA[ul$TYPHA == 1.00] <- 5.00
 ul$TYPHA <- as.double(ul$TYPHA)
 ul$TYPHA <- ul$TYPHA/100
+ul$TYPHA[is.na(ul$TYPHA)] <- 0
 
 unique(ul$Tamarisk)
 ul$Tamarisk[ul$Tamarisk == "<1"] <- "0.5"
@@ -462,12 +513,14 @@ ul$Tamarisk[ul$Tamarisk == 1.00] <- 5.00
 ul$Tamarisk[ul$Tamarisk == 10.00] <- 15.00
 ul$Tamarisk <- as.double(ul$Tamarisk)
 ul$Tamarisk <- ul$Tamarisk/100
+ul$Tamarisk[is.na(ul$Tamarisk)] <- 0
 
 unique(ul$POPE)
 ul$POPE[ul$POPE == "<1"] <- "0.5"
 ul$POPE[ul$POPE == 1.00] <- 5.00
 ul$POPE <- as.double(ul$POPE)
 ul$POPE <- ul$POPE/100
+ul$POPE[is.na(ul$POPE)] <- 0
 
 glimpse(ul)
 

@@ -119,7 +119,6 @@ emmeans(mdf.m4, pairwise~Density, adjust = "none") #same p-value with the more l
 
 emm4a <- emmeans(mdf.m4, pairwise~Group, type = "response", adjust = 'tukey')
 data4a <- multcomp::cld(emm4a, alpha = 0.1, Letters = letters)
-#this is not showing what I want it to show and idk 
 
 ggplot(data = data4a, aes(x = Group, y = response * 100)) +
   geom_point(size=2) +
@@ -452,3 +451,7 @@ ggplot(data = data3, aes(x = Group, y = response * 100)) +
           nudge_x = 0.2) 
 
 ggsave("model_means_interaction_ul.jpeg")
+
+
+
+
