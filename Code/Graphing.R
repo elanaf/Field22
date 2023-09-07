@@ -1,34 +1,11 @@
 load("clean_dfs.RData")
 library(tidyverse)
 library(RColorBrewer)
+library(patchwork)
+library(vegan)
 
-####FB####
-
-####General graph#####
-#trt x control to see how they look compared to the control 
-#see if it looks liek things came up the way they were supposed to 
-fb_1 <- fb %>% filter(Date == "2022-09-16") 
-
-#things I planted that came up: BOMA, DISP, EUMA, SYCI, SCAC, BICE, BIFR, EUOC, MUAS, SCAM, RUMA
-fb_1 %>% ggplot(aes(x = Plot, y = SYCI
-                    )) +
-  geom_point()
-
-#Things that only came up where they were supposed to: BIFR, BICE, EUMA, SYCI, SCAC, EUOC, SCAM
-#Things that look like more came up where planted:DISP (maybe slightly)
-#Things that didn't come up in control: BOMA - but came up in places where it wasn't planted as much as where was planted so idk,
-                                        #RUMA - came up the same amount in both 5 and 1
-#PHAU might be slightly more in 4 and none in 5 but same for everything else
-
-#look to see if the measurements seem to be related to anything
-fb_1%>% ggplot(aes(x = Plot, y = Measurement.3)) +
-  geom_point()
-
-#Measurement 1 highest in 2L and 3H
-#Measurement 2 highest in 1H, 1L, and 2H
-#Measurement 3 highest in 1H, 3H, and C
-
-####Invasive vs native####
+#Invasive vs native####
+##Fb####
 graph_data <-fb %>%
   select(Block, Plot, Group, Density, Date, PHAU, Cheno, Typha, 
          BOMA, DISP, EUMA, SYCI, LEFA, SCAC, BICE, BIFR, EUOC, MUAS, SCAM, RUMA,
@@ -50,6 +27,9 @@ graph_data <-fb %>%
   group_by(Block, Plot, Status) %>% #group by the plot and species status
   summarise(PC = sum(Percent_Cover, na.rm = TRUE)) #calculate totals
 
+#change BIFR to BICE because I am combining them
+fb2$SPP[fb2$SPP == "BIFR"] <- "BICE"
+
 graph_data <- graph_data %>%#change the names so they make sense
   mutate(Plot = case_when(
     Plot == "1H" ~ "Perennial forbs (high)",
@@ -66,7 +46,7 @@ graph_data <- graph_data %>%#change the names so they make sense
     TRUE ~ "PROBLEM"
   ))
 
-fb_plot <- graph_data %>%
+((fb_plot <- graph_data %>%
   mutate(Plot = factor(Plot, #set the order I want
                        levels = c("Control", "Annual forbs (high)", 
                                   "Annual forbs (low)", "Perennial forbs (high)",
@@ -74,140 +54,19 @@ fb_plot <- graph_data %>%
                                   "Rushes (low)", "Grasses (high)", 
                                   "Grasses (low)", "Bulrushes (high)",
                                   "Bulrushes (low)"))) %>% 
-  ggplot(aes(x = Plot, y = PC, color = Status)) + #x is plot, y is cover
+  ggplot(aes(x = Plot, y = PC, color = Status, shape = Status)) + #x is plot, y is cover
   stat_summary(aes(group = Status), #calculate means of the total cover
-               fun = mean, geom = "point", size = 2) +
-  stat_summary(aes(group = Status, width = 0), #calculate error bars
-               fun.data = mean_se, geom = "errorbar", size = 1) +
-  labs(x = "Functional Group", y = "Cover (%)", title = "Farmington Bay") + #labels
-  theme(axis.text.x = element_text(angle = 45, hjust = 0.9)) 
-
-
-####Graph what came up####
-#Graph of the species that I know came up and what they did over time
-##This needs to be compared to above calculations in trt x control - I made the intial graph quickly and not sure if these species are totally correct
-my_species <- c("BOMA", 'DISP', 'SYCI', 'SCAC', 'BICE', 'RUMA')
-#EUMA, EUOC, SCAM, or MUAS because not enough sightings
-#need to combine BICE and BIFR
-
-fb_short2 <- fb_short %>%
-  select(c('Block', 'Plot', 'Group', 'Density', 'Date', my_species))
-
-
-fb_wide2 <- fb_short2 %>% #pivot the table
-  tidyr::pivot_longer(
-    cols = 6:length(fb_short2), 
-    names_to = "Species",
-    values_to = "Percent_Cover"
-  )
-
-#display.brewer.all()
-
-#add a columm with the name I want as the facet labels
-fb_wide2$facet_label <- as.character(fb_wide2$Density)
-fb_wide2$facet_label[fb_wide2$facet_label == "H"] <- "High Density"
-fb_wide2$facet_label[fb_wide2$facet_label == "L"] <- "Low Density"
-fb_wide2$facet_label[fb_wide2$facet_label == "C"] <- "Control"
-
-#put the facet labels in the order that you want
-fb_wide2$facet_label <- factor(fb_wide2$facet_label, levels = c("Control", "Low Density", "High Density"))
-
-#Change species names to what I want the label to show
-fb_wide2$Species[fb_wide2$Species == "BICE"] <- "Beggartick (Annual forb)"
-fb_wide2$Species[fb_wide2$Species == "BOMA"] <- "Alkali bulrush (Bulrush)"
-fb_wide2$Species[fb_wide2$Species == "DISP"] <- "Saltgrass (Grass)"
-fb_wide2$Species[fb_wide2$Species == "RUMA"] <- "Golden dock (Annual forb)"
-fb_wide2$Species[fb_wide2$Species == "SCAC"] <- "Hardstem bulrush (Bulrush)"
-fb_wide2$Species[fb_wide2$Species == "SYCI"] <- "Rayless aster (Annual forb)"
-
-fb_wide2 %>%
-  ggplot(aes(x = Date, y = Percent_Cover, color = Species)) +
-  stat_summary(aes(group = Species),
                fun = mean, geom = "point", size = 1) +
-  stat_summary(aes(group = Species),
-               fun = mean, geom = "line", size = 1.5) +
-  facet_wrap(~facet_label) +
-  #make colors the same for both
-  scale_color_manual(values = c("#66C2A5", "#FC8D62", "#8DA0CB", "#E78AC3", "#A6D854", "#FFD92F")) +
-  theme_bw() +
-  theme(legend.position = 'right',
-        axis.text.x = element_text(angle = 45, hjust = 0.9)) +
-  labs(x = "Date", y = "Cover (%)", color = "Species")
+  stat_summary(aes(group = Status, width = 0), #calculate error bars
+               fun.data = mean_se, geom = "errorbar", size = .5) +
+  labs(x = "Functional Group", y = "Final Cover (%)", title = "Farmington Bay") + #labels
+  scale_color_manual(labels = c('Invasive', 'Native', "Seeded"), values = c("red3",  "darkblue" , "grey1" )) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 0.9),
+        plot.title = element_text(size = 10)) +
+    ylim(0, 1)
+))
 
-ggsave(filename = "Fb_plot.jpeg", 
-       width = 8,
-       height = 5,
-       device = "jpeg")
-
-# Stacked barchart of everything that came up ####
-
-fb_long <- fb %>%
-  filter(Date == "2022-09-16") %>% 
-  select(Block:Tamarisk) %>% 
-  tidyr::pivot_longer(
-    cols = PHAU:Tamarisk,
-    names_to = "species",
-    values_to = "cover"
-  ) %>% 
-  filter(species %in% c("EUOC", "EUMA", "SOCA",
-                        "JUAR", "JUTO", "JUGE",
-                        "DISP", "MUAS", "PUNU",
-                        "BOMA", "SCAC", "SCAM",
-                        "SYCI", "BICE", "RUMA")) %>% 
-  mutate(Plot = case_when(
-    Plot == "1H" ~ "Perennial forbs (high)",
-    Plot == "1L" ~ "Perennial forbs (low)",
-    Plot == "2H" ~ "Rushes (high)",
-    Plot == "2L" ~ "Rushes (low)",
-    Plot == "3H" ~ "Grasses (high)",
-    Plot == "3L" ~ "Grasses (low)",
-    Plot == "4H" ~ "Bulrushes (high)",
-    Plot == "4L" ~ "Bulrushes (low)",
-    Plot == "5H" ~ "Annual forbs (high)",
-    Plot == "5L" ~ "Annual forbs (low)",
-    Plot == "C" ~ "Control",
-    TRUE ~ "PROBLEM"
-  )) %>% 
-  group_by(Plot, species) %>% 
-  summarize(mean_cover = mean(cover, na.rm = TRUE))
-
-fb_long %>%
-  ggplot(aes(fill = species, y = mean_cover, x = Plot)) +
-  geom_bar(position = "fill", stat = "identity") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 0.9))
-
-ggsave("stacked_barchart_fb.jpeg")
-
-#EUOC increased with seeding high, EUMA increased with seeding low
-#No effect of seeding on Juncus
-#Effect of seeding on SCAC and SCAM but not BOMA 
-#Maybe an effect of seeding on DISP
-#Effect of Seeding on BICE, RUMA, and SYCI
-
- ####UL####
-####General graph####
-#trt x control to see how they look compared to the control 
-ul_1 <- ul %>% filter(Date == "2022-09-16") 
-
-#things I planted that came up: BOMA, BICE, RUMA, SCAC, SCAM, DISP, SYCI, EUOC, 
-ul_1 %>% ggplot(aes(x = Plot, y = EUOC
-                    )) +
-  geom_point()
-
-#Things that look like more came up where planted: BOMA(maybe, not really), BICE (maybe), DISP
-#Things that didn't come up in control: SCAC (but came up lots elsewhere), same as SCAC
-#PHAU is slightly higher in 3 and 5 and same as control elsewhere
-#RUMA was higher not in my seeded plots, and EUOC
-
-#look to see if the measurements seem to be related to anything
-ul_1%>% ggplot(aes(x = Plot, y = Measurement.1)) +
-  geom_point()
-
-#Measurement 1 highest in 4H
-#Measurement 2 highest in C
-#Measurement 3 highest in 1L, 2H, 4H
-
-#### invasive vs native####
+## UL####
 graph_data2 <- ul%>%
   select(Block, Plot, Group, Density, Date, PHAU, BOMA, BICE, CYER, RUMA,
          Cheno, SCAC, SCPU, SCAM, DISP, RACY, ASIN, ALPR, CYDA, Unk_Bulrush, BY, SYCI,
@@ -247,151 +106,222 @@ graph_data2 <- graph_data2 %>%
     TRUE ~ "PROBLEM"
   ))
 
-ul_plot <- graph_data2 %>%
-  mutate(Plot = factor(Plot, #set the order I want
-                       levels = c("Control", "Annual forbs (high)", 
-                                  "Annual forbs (low)", "Perennial forbs (high)",
-                                  "Perennial forbs (low)", "Rushes (high)",
-                                  "Rushes (low)", "Grasses (high)", 
-                                  "Grasses (low)", "Bulrushes (high)",
-                                  "Bulrushes (low)"))) %>% 
-  ggplot(aes(x = Plot, y = PC, color = Status)) + #x is plot, y is cover
-  stat_summary(aes(group = Status), #calculate means of the total cover
-               fun = mean, geom = "point", size = 2) +
-  stat_summary(aes(group = Status, width = 0), #calculate error bars
-               fun.data = mean_se, geom = "errorbar", size = 1) +
-  labs(x = "Functional Group", y = "Cover (%)", title = "Utah Lake") + #labels
-  theme(axis.text.x = element_text(angle = 45, hjust = 0.9)) 
-
-ul_plot
+((ul_plot <- graph_data2 %>%
+    mutate(Plot = factor(Plot, #set the order I want
+                         levels = c("Control", "Annual forbs (high)", 
+                                    "Annual forbs (low)", "Perennial forbs (high)",
+                                    "Perennial forbs (low)", "Rushes (high)",
+                                    "Rushes (low)", "Grasses (high)", 
+                                    "Grasses (low)", "Bulrushes (high)",
+                                    "Bulrushes (low)"))) %>% 
+    ggplot(aes(x = Plot, y = PC, color = Status, shape= Status)) + #x is plot, y is cover
+    stat_summary(aes(group = Status), #calculate means of the total cover
+                 fun = mean, geom = "point", size = 1) +
+    stat_summary(aes(group = Status, width = 0), #calculate error bars
+                 fun.data = mean_se, geom = "errorbar", size = .5) +
+    labs(x = "Functional Group", y = "", title = "Utah Lake") + #labels
+    scale_color_manual(labels = c('Invasive', 'Native', "Seeded"), values = c("red3",  "darkblue" , "grey1" )) +
+    theme(axis.text.x = element_text(angle = 45, hjust = 0.9),
+          plot.title = element_text(size = 10)) +
+    ylim(0, 1)
+  
+))
 
 library(patchwork)
-fb_plot + ul_plot
+fb_plot + ul_plot + plot_layout(guides = "collect")
 ggsave("native_seeded_invasive_cover.jpeg")
 
-#Graph of all the plots and total cover - split invasive and native ####
-ul_split$plot_names <- factor(ul_split$plot_names, 
-                              levels = c("Annual forbs (high)", "Annual forbs (low)", "Perennial forbs (high)", "Perennial forbs (low)",
-                                         "Bulrushes (high)", "Bulrushes (low)","Rushes (high)", "Rushes (low)","Grasses (high)", "Grasses (low)", 
-                                         "Control"))
 
-ul_split %>% 
-  ggplot(aes(x = plot_names, y = PC, color = Status)) +
-  stat_summary(aes(group = Status),
-               fun = mean, geom = "point", size = 2) +
-  stat_summary(aes(group = Status, width = 0),
-               fun.data = mean_se, geom = "errorbar", size = 1) +
-  labs(x = "Functional Group", y = "Cover (%)") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 0.9)) +
-  ggtitle("Utah Lake") +
-  ylim(0, 100)
+#Barchart of seeded ####
 
-ggsave("ul_invasive_native.jpeg",
-       device = jpeg)
+##FB####
+cp <- c("#A6CEE3", "#1F78B4" ,"#B2DF8A", "#33A02C", "#FB9A99" ,
+        "#E31A1C", "#FDBF6F" ,"#FF7F00", "#CAB2D6","#6A3D9A")
 
-#Graphs so I know what came up and what they did over time
-##This needs to be compared to above calculations in trt x control - I made the intial graph quickly and not sure if these species are totally correct
-my_species <- c("BOMA", 'DISP', 'BICE', 'SCAM', 'EUOC')
-#tried to only include things that may have possibly come up at my sites
-ul_short <- ul %>%
-  select(c('Block', 'Plot', 'Group', 'Density', 'Date', my_species))
-
-
-ul_wide <- ul_short %>% #pivot the table
-  tidyr::pivot_longer(
-    cols = 6:length(ul_short), 
-    names_to = "Species",
+fb2 <-fb %>%
+  select(Block, Plot, Group, Density, Date, PHAU, Cheno, Typha, 
+         BOMA, DISP, EUMA, SYCI, LEFA, SCAC, BICE, BIFR, EUOC, MUAS, SCAM, RUMA,
+         RUST, Unk_Bulrush, SARU, Tamarisk) %>%  #remove unnecessary columns
+  filter(Date == "2022-09-16") %>%  #only the last sampling date
+  pivot_longer(
+    cols = 6:24, 
+    names_to = "SPP",
     values_to = "Percent_Cover"
-  )
+  ) %>% #pivot so that all species names are in one column
+  mutate(Status = case_when(
+    SPP %in% c("PHAU", "TYPHA", "RUST", "Tamarisk") ~ "Invasive",
+    SPP %in% c("BOMA", "SCAC", "SCAM") & Group == 4 ~ "Seeded",
+    SPP %in% c("DISP", "MUAS") & Group == 3 ~ "Seeded",
+    SPP %in% c("EUOC", "EUMA") & Group == 1 ~ "Seeded",
+    SPP %in% c("SYCI", "BICE", "RUMA") & Group == 5 ~ "Seeded",
+    TRUE ~ "Native"
+  )) 
 
-#groups natives and invasives
-ul_split<- ul_wide %>%
-  dplyr::mutate(Status = 
-                  dplyr::if_else(
-                    SPP %in%
-                      c("PHAU", "Typha", "Rust", "Tamarisk"), 
-                    "Invasive", "Native"))
+#change BIFR to BICE because I am combining them
+fb2$SPP[fb2$SPP == "BIFR"] <- "BICE"
 
-#RUMA, SYCI, and SCAC were highest in the control
-#add a columm with the name I want as the facet labels
-ul_wide$facet_label <- as.character(ul_wide$Density)
-ul_wide$facet_label[ul_wide$facet_label == "H"] <- "High Density"
-ul_wide$facet_label[ul_wide$facet_label == "L"] <- "Low Density"
-ul_wide$facet_label[ul_wide$facet_label == "C"] <- "Control"
+fb2$Group <- factor(fb2$Group, levels = c(1, 10, 2, 3, 4, 5),
+                    labels = c("Perennial forb", "Control", "Rush",
+                               "Grass", "Bulrush", "Annual Forb"))
+fb2$Density <- factor(fb2$Density, levels = c("H", "L"),
+                    labels = c("High", "Low"))
 
-
-#put the facet labels in the order that you want
-ul_wide$facet_label <- factor(ul_wide$facet_label, levels = c("Control", "Low Density", "High Density"))
-
-#change the species names to what I want the legend to show
-ul_wide$Species[ul_wide$Species == "BICE"] <- "Beggartick (Annual forb)"
-ul_wide$Species[ul_wide$Species == "BOMA"] <- "Alkali bulrush (Bulrush)"
-ul_wide$Species[ul_wide$Species == "DISP"] <- "Saltgrass (Grass)"
-ul_wide$Species[ul_wide$Species == "EUOC"] <- "Western goldentop (Perennial forb)"
-ul_wide$Species[ul_wide$Species == "SCAM"] <- "Three-square bulrush (Bulrush)"
-
-
-ul_wide %>%
-  ggplot(aes(x = Date, y = Percent_Cover, color = Species)) +
-  stat_summary(aes(group = Species),
-               fun = mean, geom = "point", size = 1) +
-  stat_summary(aes(group = Species),
-               fun = mean, geom = "line", size = 1.5) +
-  facet_wrap(~facet_label) +
-  #make colors the same for both
-  scale_color_manual(values = c("#66C2A5", "#FC8D62", "#FFD92F", "#BEBADA", "#80B1D3")) +
-  theme_bw() +
-  theme(legend.position = 'right',
-        axis.text.x = element_text(angle = 45, hjust = 0.9)) +
-  labs(x = "Date", y = "Cover (%)", color = "Species") 
-
-ggsave(filename = "Ul_plot.jpeg", 
-       width = 8,
-       height = 5,
-       device = "jpeg")
-
-
-# Stacked barchart of everything that came up ####
-
-ul_long <- ul %>%
-  filter(Date == "2022-09-16") %>% 
-  select(Block:LASE) %>% 
-  tidyr::pivot_longer(
-    cols = Unk_Forb:LASE,
-    names_to = "species",
-    values_to = "cover"
-  ) %>% 
-  filter(species %in% c("EUOC", "EUMA", "SOCA",
-                        "JUAR", "JUTO", "JUGE",
-                        "DISP", "MUAS", "PUNU",
-                        "BOMA", "SCAC", "SCAM",
-                        "SYCI", "BICE", "RUMA")) %>% 
-  mutate(Plot = case_when(
-    Plot == "1H" ~ "Perennial forbs (high)",
-    Plot == "1L" ~ "Perennial forbs (low)",
-    Plot == "2H" ~ "Rushes (high)",
-    Plot == "2L" ~ "Rushes (low)",
-    Plot == "3H" ~ "Grasses (high)",
-    Plot == "3L" ~ "Grasses (low)",
-    Plot == "4H" ~ "Bulrushes (high)",
-    Plot == "4L" ~ "Bulrushes (low)",
-    Plot == "5H" ~ "Annual forbs (high)",
-    Plot == "5L" ~ "Annual forbs (low)",
-    Plot == "C" ~ "Control",
-    TRUE ~ "PROBLEM"
-  )) %>% 
-  group_by(Plot, species) %>% 
-  summarize(mean_cover = mean(cover, na.rm = TRUE))
-
-ul_long %>%
-  ggplot(aes(fill = species, y = mean_cover, x = Plot)) +
+fb_stack <- fb2 %>% 
+  dplyr::filter(Status == "Seeded") %>% 
+  ggplot(aes(fill = SPP, y = Percent_Cover, x = Density)) +
   geom_bar(position = "fill", stat = "identity") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 0.9))
+  facet_grid(~Group) +
+  scale_fill_manual(values = cp,
+                    labels = c('BICE',
+                               'BOMA',
+                               'DISP',
+                               'EUMA',
+                               'EUOC',
+                               'MUAS',
+                               'RUMA',
+                               'SCAC',
+                               'SCAM',
+                               'SYCI'))+
+  labs(x = "", y = "Final proportional cover", 
+       fill = "Species", title = "Farmington Bay") +
+  theme(plot.title = element_text(size = 10))
+  
 
-#No effect of seeding on perennial forbs
-#No effect of seeding on Juncus
-#Seeding maybe increased BOMA, but not SCAC and SCAM
-#DISP increased for high grasses
-#No effect of seeding on annual forbs
+##UL####
 
-ggsave("stacked_barchart_ul.jpeg")
+cp2 <- c("#A6CEE3", "#1F78B4" ,"#B2DF8A", "#FB9A99" ,
+        "#FDBF6F" ,"#FF7F00", "#CAB2D6","#6A3D9A")
+
+ul2 <- ul%>%
+  select(Block, Plot, Group, Density, Date, PHAU, BOMA, BICE, CYER, RUMA,
+         Cheno, SCAC, SCPU, SCAM, DISP, RACY, ASIN, ALPR, CYDA, Unk_Bulrush, BY, SYCI,
+         EUOC, TYPHA, Tamarisk, POPE, POFR, SAAM, BASC, LASE) %>%
+  filter(Date == "2022-09-16") %>% 
+  pivot_longer(
+    cols = 6:30, 
+    names_to = "SPP",
+    values_to = "Percent_Cover"
+  ) %>% 
+  mutate(Status = case_when(
+    SPP %in% c("PHAU", "TYPHA", "RUST", 
+               "Tamarisk", "ALPR", "CYDA", "BY", 
+               "BASC", "LASE") ~ "Invasive",
+    SPP %in% c("BOMA", "SCAC", "SCAM") & Group == 4 ~ "Seeded",
+    SPP == "DISP" & Group == 3 ~ "Seeded",
+    SPP == "EUOC" & Group == 1 ~ "Seeded",
+    SPP %in% c("SYCI", "BICE", "RUMA") & Group == 5 ~ "Seeded",
+    TRUE ~ "Native"
+  ))
+
+ul2$Group <- factor(ul2$Group, levels = c(1, 10, 2, 3, 4, 5),
+                    labels = c("Perennial forb", "Control", "Rush",
+                               "Grass", "Bulrush", "Annual Forb"))
+ul2$Density <- factor(ul2$Density, levels = c("H", "L"),
+                      labels = c("High", "Low"))
+
+ul_stack <- ul2 %>% 
+  dplyr::filter(Status == "Seeded") %>% 
+  ggplot(aes(fill = SPP, y = Percent_Cover, x = Density)) +
+  geom_bar(position = "fill", stat = "identity") +
+  facet_grid(~Group) +
+  scale_fill_manual(values = cp2,
+                    labels = c("BICE",
+                               "BOMA",
+                               'DISP',
+                               'EUOC',
+                               'RUMA',
+                               'SCAC',
+                               'SCAM',
+                               'SYCI'))+
+  labs(x = "Native seeding density", y = "", 
+       fill = "Species", title = "Utah Lake") +
+  theme(plot.title = element_text(size = 10),
+        legend.position = "none")
+
+fb_stack / ul_stack + plot_layout(guides = "collect")
+ggsave("stacked_species.jpeg")
+
+# Diversity index ####
+##FB####
+#only want the final cover
+fb_di <- fb %>% 
+  filter(Date == "2022-09-16") %>% 
+  select(Block, Plot, Group, Density, PHAU:RUST, SARU, Tamarisk)
+  
+#make all percentages
+fb_di <- mutate_if(fb_di, is.numeric, ~.*100)
+
+#make a new column with the tub
+fb_di <- fb_di %>% 
+  unite(col = "ID",
+        c('Block', 'Plot'))
+
+#name the rows
+fb_di2 <- fb_di
+row.names(fb_di2) <- fb_di2$"ID"
+
+#Now try the diversity calculation
+fb_di2 <- dplyr::select(fb_di2, -c(ID, Group, Density))
+div <- diversity(fb_di2, "shannon")
+fb_di$shannon <- div
+
+#Plot ####
+#change order of phrag presence and also labels
+fb_di$Group <- factor(fb_di$Group, levels = c(1, 2, 3, 4, 5, 10),
+                                   labels = c("Perennial Forb", "Rush", "Grass", "Bulrush",
+                                              "Annual Forb", "Control"))
+fb_di$Density <- factor(fb_di$Density, levels = c("L", "H", "C"),
+                        labels = c("Low", "High", "Control"))
+
+a <- fb_di %>% 
+  ggplot(aes(x = Group, y = shannon, fill = Density)) +
+  geom_boxplot() +
+  labs(y = "Shannon Diversity Index", x = "Seed mix", title = "Farmington Bay") +
+  scale_fill_manual(values = c("red3", "darkblue", "gray")) + #change legend labels
+  theme(axis.text.x = element_text(angle = 45, hjust = 0.9),
+        plot.title = element_text(size = 10),
+        legend.position = "blank") +
+  ylim(0, 2.5)
+
+##UL####
+#only want the final cover
+ul_di <- ul %>% 
+  filter(Date == "2022-09-16") %>% 
+  select(Block, Plot, Group, Density, PHAU, BOMA:ASIN, ALPR, CYDA, BY:LASE)
+
+#make all percentages
+ul_di <- mutate_if(ul_di, is.numeric, ~.*100)
+
+#make a new column with the tub
+ul_di <- ul_di %>% 
+  unite(col = "ID",
+        c('Block', 'Plot'))
+
+#name the rows
+ul_di2 <- ul_di
+row.names(ul_di2) <- ul_di2$"ID"
+
+#Now try the diversity calculation
+ul_di2 <- dplyr::select(ul_di2, -c(ID, Group, Density))
+div <- diversity(ul_di2, "shannon")
+ul_di$shannon <- div
+
+#Plot ####
+#change order of phrag presence and also labels
+ul_di$Group <- factor(ul_di$Group, levels = c(1, 2, 3, 4, 5, 10),
+                      labels = c("Perennial Forb", "Rush", "Grass", "Bulrush",
+                                 "Annual Forb", "Control"))
+ul_di$Density <- factor(ul_di$Density, levels = c("L", "H", "C"),
+                        labels = c("Low", "High", "Control"))
+
+b <- ul_di %>% 
+  ggplot(aes(x = Group, y = shannon, fill = Density)) +
+  geom_boxplot() +
+  labs(y = "", x = "Seed mix", title = "Utah Lake") +
+  scale_fill_manual(values = c("red3", "darkblue", "gray")) + #change legend labels
+  theme(axis.text.x = element_text(angle = 45, hjust = 0.9),
+        plot.title = element_text(size = 10)) +
+  ylim(0, 2.5)
+
+a + b
+ggsave("diversity_index_both.jpeg")
