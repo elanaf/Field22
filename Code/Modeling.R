@@ -812,3 +812,13 @@ simulateResiduals(mdf.m2, plot = T) #terrible with both
 plotResiduals(mdf.m2, form= ul_g$gd) 
 
 #can't get to fit, don't use
+
+mdf2 <- dplyr::select(mdf1, c(Plot, EUOC))
+
+mdf2 %>% 
+  ggplot(aes(x = Plot, y = EUOC)) + #x is plot, y is cover
+  stat_summary(aes(group = Plot), #calculate means of the total cover
+               fun = mean, geom = "bar", size = 1) +
+  stat_summary(aes(group = Plot, width = 0), #calculate error bars
+               fun.data = mean_se, geom = "errorbar", size = .5) 
+
