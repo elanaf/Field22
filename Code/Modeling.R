@@ -7,6 +7,7 @@ library(car)
 library(multcompView)
 library(gridExtra)
 library(multcomp)
+library(patchwork)
 options(contrasts = c("contr.sum", "contr.poly"))
 
 fb$Group <- as.factor(fb$Group)
@@ -126,18 +127,19 @@ data4a$Group <- factor(data4a$Group,
          labels = c("Annual Forb", "Bulrush", "Grass",
                     "Rush", "Perennial Forb"))
 
-ggplot(data = data4a, aes(x = Group, y = response)) +
+mix <- ggplot(data = data4a, aes(x = Group, y = response)) +
   geom_point(size=2) +
   geom_errorbar(aes(ymin = (response - SE),
                     ymax = (response+SE)),
-                width=0, size=0.5) +
-  labs(x="Seed Mix", y = "Model Predicted <br> Proportional Invasive Cover") +
+                width=0, size=0.4) +
+  labs(x="Seed Mix", y = "Model Predicted <br> Proportional Invasive Cover",
+       title = "(a)") +
   geom_text(aes(label = .group,  y = response),
-            nudge_x = 0.2) +
+            nudge_x = 0.3) +
   theme(axis.title.y = ggtext::element_markdown(),
-        axis.text.x = element_text(angle = 45, hjust = 0.9))
-
-ggsave("model_means_total_invasive_fb_mix.jpeg")
+        axis.text.x = element_text(angle = 45, hjust = 0.9),
+        plot.title = element_text(size = 9)) +
+  coord_cartesian(ylim = c(0, 0.15))
 
 emm4b <- emmeans(mdf.m4, pairwise~Density, type = "response", adjust = 'tukey')
 data4b <- multcomp::cld(emm4b, alpha = 0.1, Letters = letters)
@@ -146,19 +148,24 @@ data4b$Density <- factor(data4b$Density,
                          levels = c("L", "H"),
                          labels = c("Low", "High"))
 
-ggplot(data = data4b, aes(x = Density, y = response, color= Density)) +
+density <- ggplot(data = data4b, aes(x = Density, y = response, color= Density)) +
   geom_point(size=2) +
   geom_errorbar(aes(ymin = (response - SE),
                     ymax = (response+SE)),
                 width=0, size=0.5) +
-  labs(x="Seed Mix", y = "Model Predicted <br> Proportional Invasive Cover") +
+  labs(x="Seed Mix", y = "Model Predicted <br> Proportional Invasive Cover",
+       title = "(b)") +
   scale_color_manual(values = c("darkblue", "red3"))+
   geom_text(aes(label = .group,  y = response),
             nudge_x = 0.2, color = "black") +
   theme(axis.title.y = ggtext::element_markdown(),
-        legend.position = "blank")
+        legend.position = "blank",
+        plot.title = element_text(size = 9))+
+  coord_cartesian(ylim = c(0, 0.1))
 
-ggsave("model_means_total_invasive_fb_density.jpeg")
+
+mix + density + plot_layout(width = c(2, 1))
+ggsave("model_means_fb_invasive_mix_density.jpeg")
 
 #UL ####
 mdf1 <- ul %>%
@@ -430,7 +437,8 @@ ggplot(data = data1a, aes(x = Group, y = response)) +
             color = "black",
             hjust = 0.05) +
   theme(axis.title.y = ggtext::element_markdown(),
-        axis.text.x = element_text(angle = 45, hjust = 0.9))
+        axis.text.x = element_text(angle = 45, hjust = 0.9)) +
+  coord_cartesian(ylim = c(0, .15))
 
 ggsave("model_means_bulrush_fb.jpeg")
 
@@ -671,11 +679,12 @@ ggplot(data = data1a, aes(x = Group, y = response)) +
             color = "black",
             hjust = 0.05) +
   theme(axis.title.y = ggtext::element_markdown(),
-        axis.text.x = element_text(angle = 45, hjust = 0.9))
+        axis.text.x = element_text(angle = 45, hjust = 0.9)) +
+  coord_cartesian(ylim = c(0, 0.4))
 
 ggsave("model_means_perennial_ul.jpeg")
 
-####Dunnetts####
+s####Dunnetts####
 ul_pf$gd <- factor(ul_pf$Group:ul_pf$Density) #compares every combination of treatment and control
 mdf.m2 <- glmmTMB(cover_pf ~ gd #* for interaction
                   + (1|Block),
@@ -746,7 +755,8 @@ ggplot(data = data1a, aes(x = Group, y = response)) +
             color = "black",
             hjust = 0.05) +
   theme(axis.title.y = ggtext::element_markdown(),
-        axis.text.x = element_text(angle = 45, hjust = 0.9))
+        axis.text.x = element_text(angle = 45, hjust = 0.9)) +
+  coord_cartesian(ylim = c(0, 0.25))
 
 ggsave("model_means_bulrush_ul.jpeg")
 

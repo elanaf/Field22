@@ -9,7 +9,7 @@ View(ul)
 
 ##Note: I have a slightly cleaner, though not shorter, way of changing all my column values
 #in my bookdown for Reproducible Data Science. I can decide later if that would be better to publish
-####fix FB####
+#fix FB####
 glimpse(fb)
 
 #remake block and make plot a factor
@@ -227,10 +227,10 @@ max(fb$Measurement.3)
 
 #Add a new section for invasives and natives
 df <- fb %>%
-  select("PHAU", "Typha", "RUST", "Tamarisk") %>%
+  dplyr::select("PHAU", "Typha", "RUST", "Tamarisk") %>%
   mutate(Invasive = rowSums(.,na.rm = T))
 df1 <- fb %>%
-  select("Cheno", "BOMA", "DISP", "EUMA", "SYCI", "LEFA", "SCAC",
+  dplyr::select("Cheno", "BOMA", "DISP", "EUMA", "SYCI", "LEFA", "SCAC",
          "BICE", "BIFR", "EUOC", "MUAS", "SCAM", "RUMA", "Unk_Bulrush", 
          "SARU") %>%
   mutate(Native = rowSums(.,na.rm = T))
@@ -252,7 +252,7 @@ fb$Invasive.Cover[fb$Invasive.Cover==0] <- 0.0025
 fb$Native.Cover[is.na(fb$Native.Cover)] <- 0.0025
 fb$Native.Cover[fb$Native.Cover==0] <- 0.0025
 
-####fix UL####
+# fix UL####
 glimpse(ul)
 
 #make block and plot factors, fix the C group in Block
@@ -537,11 +537,11 @@ max(ul$Measurement.3, na.rm = TRUE)
 
 #Add a new section for invasives and natives
 df <- ul %>%
-  select("PHAU", "TYPHA", "Tamarisk", "ALPR", "CYDA", "BY", 
+  dplyr::select("PHAU", "TYPHA", "Tamarisk", "ALPR", "CYDA", "BY", 
          "BASC", "LASE") %>%
   mutate(Invasive = rowSums(.,na.rm = T))
 df1 <- ul %>%
-  select("Unk_Bulrush", "BOMA", "BICE", 'CYER', 'RUMA', 'Cheno', 'SCAC', 'SCAM',
+  dplyr::select("Unk_Bulrush", "BOMA", "BICE", 'CYER', 'RUMA', 'Cheno', 'SCAC', 'SCAM',
          'SCPU', 'DISP', 'RACY', 'ASIN', 'SYCI', 'EUOC', 'POPE', 'POFR', 'SAAM') %>%
   mutate(Native = rowSums(.,na.rm = T))
 
@@ -562,8 +562,156 @@ ul$Invasive.Cover[ul$Invasive.Cover==0] <- 0.0025
 ul$Native.Cover[is.na(ul$Native.Cover)] <- 0.0025
 ul$Native.Cover[ul$Native.Cover==0] <- 0.0025
 
+# 2023 ####
+fb23 <- read.csv("/Users/elanafeldman/Documents/USUClasses/Thesis_Code/Field22/Cleaned-Data/FB2023-CLEAN.csv")
 
+library(dplyr)
 
-####Save files####
-save(ul, fb, file = "clean_dfs.RData")
+#View(fb23)
+glimpse(fb23)
 
+#rename block
+names(fb23)[1] <- "Block"
+fb23$Block <- as.factor(fb23$Block)
+
+#make everythign a factor
+fb23$Plot <- as.factor(fb23$Plot)
+fb23$Group[fb23$Group == "C"] <- 10
+fb23$Group <- as.factor(fb23$Group)
+fb23$Density <- as.factor(fb23$Density)
+
+#fix the date
+library(lubridate)
+fb23$Date <- lubridate::mdy(fb23$Date)
+
+#change cover values to the 5s and make numeric
+unique(fb23$Total.Cover)
+fb23$Total.Cover[fb23$Total.Cover == "<1"] <- 0.5
+fb23$Total.Cover[fb23$Total.Cover == 0] <- 0.25
+fb23$Total.Cover[fb23$Total.Cover == 1.00] <- 5.00
+fb23$Total.Cover[fb23$Total.Cover == 10.00] <- 15.00
+fb23$Total.Cover[fb23$Total.Cover == 20.00] <- 25.00
+fb23$Total.Cover[fb23$Total.Cover == 30.00] <- 35.00
+fb23$Total.Cover[fb23$Total.Cover == 40.00] <- 45.00
+fb23$Total.Cover[fb23$Total.Cover == 50.00] <- 55.00
+fb23$Total.Cover[fb23$Total.Cover == 60.00] <- 65.00
+fb23$Total.Cover[fb23$Total.Cover == 70.00] <- 75.00
+fb23$Total.Cover[fb23$Total.Cover == 80.00] <- 85.00
+fb23$Total.Cover[fb23$Total.Cover == 90.00] <- 95.00
+fb23$Total.Cover <- as.double(fb23$Total.Cover)
+fb23$Total.Cover <- fb23$Total.Cover/100
+
+#now do it for all the other columns
+unique(fb23$PHAU)
+fb23$PHAU[fb23$PHAU == ""] <- 0
+fb23$PHAU[fb23$PHAU == "<1"] <- 0.5
+fb23$PHAU[fb23$PHAU == 0] <- 0.25
+fb23$PHAU[fb23$PHAU == 1.00] <- 5.00
+fb23$PHAU[fb23$PHAU == 10.00] <- 15.00
+fb23$PHAU[fb23$PHAU == 20.00] <- 25.00
+fb23$PHAU[fb23$PHAU == 30.00] <- 35.00
+fb23$PHAU[fb23$PHAU == 40.00] <- 45.00
+fb23$PHAU[fb23$PHAU == 50.00] <- 55.00
+fb23$PHAU[fb23$PHAU == 60.00] <- 65.00
+fb23$PHAU[fb23$PHAU == 70.00] <- 75.00
+fb23$PHAU[fb23$PHAU == 80.00] <- 85.00
+fb23$PHAU[fb23$PHAU == 90.00] <- 95.00
+fb23$PHAU <- as.double(fb23$PHAU)
+fb23$PHAU <- fb23$PHAU/100
+
+unique(fb23$Typha)
+fb23$Typha[fb23$Typha == ""] <- 0
+fb23$Typha[fb23$Typha == "<1"] <- 0.5
+fb23$Typha[fb23$Typha == 0] <- 0.25
+fb23$Typha[fb23$Typha == 1.00] <- 5.00
+fb23$Typha[fb23$Typha == 10.00] <- 15.00
+fb23$Typha[fb23$Typha == 20.00] <- 25.00
+fb23$Typha[fb23$Typha == 30.00] <- 35.00
+fb23$Typha[fb23$Typha == 40.00] <- 45.00
+fb23$Typha <- as.double(fb23$Typha)
+fb23$Typha <- fb23$Typha/100
+
+unique(fb23$BOMA)
+fb23$BOMA[fb23$BOMA == ""] <- 0
+fb23$BOMA[fb23$BOMA == "<1"] <- 0.5
+fb23$BOMA[fb23$BOMA == 0] <- 0.25
+fb23$BOMA[fb23$BOMA == 1.00] <- 5.00
+fb23$BOMA <- as.double(fb23$BOMA)
+fb23$BOMA <- fb23$BOMA/100
+
+unique(fb23$DISP)
+fb23$DISP[fb23$DISP == ""] <- 0
+fb23$DISP[fb23$DISP == "<1"] <- 0.5
+fb23$DISP[fb23$DISP == 0] <- 0.25
+fb23$DISP[fb23$DISP == 1.00] <- 5.00
+fb23$DISP[fb23$DISP == 10.00] <- 15.00
+fb23$DISP <- as.double(fb23$DISP)
+fb23$DISP <- fb23$DISP/100
+
+unique(fb23$SCAC)
+fb23$SCAC[is.na(fb23$SCAC)] <- 0
+fb23$SCAC[fb23$SCAC == 1.00] <- 5.00
+fb23$SCAC[fb23$SCAC == 0] <- 0.25
+fb23$SCAC[fb23$SCAC == 10.00] <- 15.00
+fb23$SCAC[fb23$SCAC == 20.00] <- 25.00
+fb23$SCAC <- as.double(fb23$SCAC)
+fb23$SCAC <- fb23$SCAC/100
+
+unique(fb23$SCAM)
+fb23$SCAM[fb23$SCAM == ""] <- 0
+fb23$SCAM[fb23$SCAM == "<1"] <- 0.5
+fb23$SCAM[fb23$SCAM == 0] <- 0.25
+fb23$SCAM[fb23$SCAM == 1.00] <- 5.00
+fb23$SCAM[fb23$SCAM == 10.00] <- 15.00
+fb23$SCAM[fb23$SCAM == 30.00] <- 35.00
+fb23$SCAM <- as.double(fb23$SCAM)
+fb23$SCAM <- fb23$SCAM/100
+
+unique(fb23$RUMA)
+fb23$RUMA[is.na(fb23$RUMA)] <- 0
+fb23$RUMA[fb23$RUMA == 1.00] <- 5.00
+fb23$RUMA[fb23$RUMA == 0] <- 0.25
+fb23$RUMA[fb23$RUMA == 20.00] <- 25.00
+fb23$RUMA[fb23$RUMA == 10.00] <- 15.00
+fb23$RUMA[fb23$RUMA == 30.00] <- 35.00
+fb23$RUMA[fb23$RUMA == 40.00] <- 45.00
+fb23$RUMA[fb23$RUMA == 50.00] <- 55.00
+fb23$RUMA <- as.double(fb23$RUMA)
+fb23$RUMA <- fb23$RUMA/100
+
+unique(fb23$RUST)
+fb23$RUST[is.na(fb23$RUST)] <- 0
+fb23$RUST[fb23$RUST == 1.00] <- 5.00
+fb23$RUST[fb23$RUST == 0] <- 0.25
+fb23$RUST <- as.double(fb23$RUST)
+fb23$RUST <- fb23$RUST/100
+
+glimpse(fb23)
+
+#check measurements to make sure they make sense
+min(fb23$Measurement.1)
+max(fb23$Measurement.1)
+
+min(fb23$Measurement.2)
+max(fb23$Measurement.2)
+
+min(fb23$Measurement.3)
+max(fb23$Measurement.3)
+
+#Add a new section for invasives and natives
+df <- fb23 %>%
+  dplyr::select("PHAU", "Typha", "RUST") %>%
+  mutate(Invasive = rowSums(.,na.rm = T))
+df1 <- fb23 %>%
+  dplyr::select("BOMA", "SCAC",
+         "SCAM",  "RUMA", 
+         "DISP") %>%
+  mutate(Native = rowSums(.,na.rm = T))
+
+fb23$Invasive.Cover <- df$Invasive
+fb23$Native.Cover <- df1$Native
+
+max(fb23$Invasive.Cover, na.rm = T)
+max(fb23$Native.Cover, na.rm = T)
+
+save(ul, fb, fb23, file = "clean_dfs.RData")
